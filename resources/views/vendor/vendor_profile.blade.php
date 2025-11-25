@@ -385,7 +385,7 @@
                                 <!-- CNIC Front -->
                                 <div class="form-group">
                                     <label class="form-label">CNIC Front <span style="color:red;">*</span></label>
-                                    <input type="file" class="form-control @error('cnic_front') is-invalid @enderror" name="cnic_front" accept="image/*">
+                                    <input type="file" class="form-control @error('cnic_front') is-invalid @enderror" name="cnic_front" accept="image/*" required>
                                     @error('cnic_front')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -397,7 +397,7 @@
                                 <!-- CNIC Back -->
                                 <div class="form-group">
                                     <label class="form-label">CNIC Back <span style="color:red;">*</span></label>
-                                    <input type="file" class="form-control @error('cnic_back') is-invalid @enderror" name="cnic_back" accept="image/*">
+                                    <input type="file" class="form-control @error('cnic_back') is-invalid @enderror" name="cnic_back" accept="image/*" required>
                                     @error('cnic_back')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -409,7 +409,7 @@
                                 <!-- Registration Certificate -->
                                 <div class="form-group">
                                     <label class="form-label">Registration Certificate</label>
-                                    <input type="file" class="form-control @error('registration_certificate') is-invalid @enderror" name="registration_certificate" accept="image/*,application/pdf">
+                                    <input type="file" class="form-control @error('registration_certificate') is-invalid @enderror" name="registration_certificate" accept="image/*,application/pdf" required>
                                     @error('registration_certificate')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -421,7 +421,7 @@
                                 <!-- GST Certificate -->
                                 <div class="form-group">
                                     <label class="form-label">GST Certificate</label>
-                                    <input type="file" class="form-control @error('GST_certificate') is-invalid @enderror" name="GST_certificate" accept="image/*,application/pdf">
+                                    <input type="file" class="form-control @error('GST_certificate') is-invalid @enderror" name="GST_certificate" accept="image/*,application/pdf" required>
                                     @error('GST_certificate')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -433,7 +433,7 @@
                                 <!-- PAN Card -->
                                 <div class="form-group">
                                     <label class="form-label">PAN Card</label>
-                                    <input type="file" class="form-control @error('PAN_card') is-invalid @enderror" name="PAN_card" accept="image/*,application/pdf">
+                                    <input type="file" class="form-control @error('PAN_card') is-invalid @enderror" name="PAN_card" accept="image/*,application/pdf" required>
                                     @error('PAN_card')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -445,7 +445,7 @@
                                 <!-- Shop Image -->
                                 <div class="form-group">
                                     <label class="form-label">Shop Image</label>
-                                    <input type="file" class="form-control @error('shop_image') is-invalid @enderror" name="shop_image" accept="image/*">
+                                    <input type="file" class="form-control @error('shop_image') is-invalid @enderror" name="shop_image" accept="image/*" required   >
                                     @error('shop_image')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror

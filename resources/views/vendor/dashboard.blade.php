@@ -1,7 +1,12 @@
-@extends('vendor.layouts.master')
+@extends('vendor.master')
 
 @section('title', 'Vendor Dashboard | ApnaPanda')
-
+@section('header')
+    @include('vendor.include.header')
+@endsection
+@section('sidebar')
+    @include('vendor.include.sidebar')
+@endsection
 @section('content')
 <div class="container-fluid">
     <div class="row g-4 mb-4">
