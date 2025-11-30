@@ -2375,3 +2375,13 @@
     .select2-container--default.select2-container--open .select2-dropdown {
         animation: select2FadeIn 0.2s ease;
     }
+
+    .display_order{
+         background:#eef2ff;color:#4f46e5;padding:6px 12px;border-radius:6px;font-weight:600;font-size:14px;display:inline-block;
+    }
+    .is_active{
+         background:#e6ffed;color:#27ae60;border:1px solid #2ecc71;padding:6px 12px;border-radius:20px;font-weight:600;font-size:14px;display:inline-block;
+    }
+    .is_inactive{
+         background:#ffe6e6;color:#e74c3c;border:1px solid #e74c3c;padding:6px 12px;border-radius:20px;font-weight:600;font-size:14px;display:inline-block;
+    }

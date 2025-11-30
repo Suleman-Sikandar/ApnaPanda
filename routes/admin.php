@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\AdminAuthController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\AdminUserController;
-
+use App\Http\Controllers\Admin\{
+    DashboardController,
+    AdminAuthController,
+    RoleController,
+    AdminUserController,
+    ModuleCategoryController,
+};
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -51,4 +53,11 @@ Route::prefix('admin')->group(function(){
     Route::post('user/update/{id}', [AdminUserController::class, 'update'])->name('admin.user.update');
     Route::delete('user/delete/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
     Route::get('user/profile/{id}', [AdminUserController::class, 'show'])->name('admin.user.show');
+
+    //Routes for Module Categories 
+    Route::get('module-categories', [ModuleCategoryController::class, 'index'])->name('admin.module.categories');
+    Route::post('module-categories/store', [ModuleCategoryController::class, 'store'])->name('admin.module.categories.store');
+    Route::get('module-categories/edit/{id}', [ModuleCategoryController::class, 'edit'])->name('admin.module.categories.edit');
+    Route::post('module-categories/update/{id}', [ModuleCategoryController::class, 'update']);
+    Route::delete('module-categories/delete/{id}', [ModuleCategoryController::class, 'destroy']);
 });

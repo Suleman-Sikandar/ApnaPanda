@@ -117,7 +117,7 @@
                         <i class="bi bi-grid-3x3"></i>
                         <span>Modules</span>
                     </a>
-                    <a href="#" class="nav-subitem">
+                    <a href="{{ route('admin.module.categories') }}" class="nav-subitem">
                         <i class="bi bi-folder"></i>
                         <span>Module Categories</span>
                     </a>
