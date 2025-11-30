@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\{
     RoleController,
     AdminUserController,
     ModuleCategoryController,
+    ModuleController,
 };
 /*
 |--------------------------------------------------------------------------
@@ -60,4 +61,11 @@ Route::prefix('admin')->group(function(){
     Route::get('module-categories/edit/{id}', [ModuleCategoryController::class, 'edit'])->name('admin.module.categories.edit');
     Route::post('module-categories/update/{id}', [ModuleCategoryController::class, 'update']);
     Route::delete('module-categories/delete/{id}', [ModuleCategoryController::class, 'destroy']);
+
+    //Route For Admin Modules
+    Route::get('modules', [ModuleController::class, 'index'])->name('admin.modules');
+    Route::post('modules/store', [ModuleController::class, 'store'])->name('admin.modules.update');
+    Route::get('modules/edit/{id}', [ModuleController::class, 'edit'])->name('admin.modules.edit');
+    Route::post('modules/update/{id}', [ModuleController::class, 'update'])->name('admin.modules.update');
+    Route::delete('modules/delete/{id}', [ModuleController::class, 'destroy'])->name('admin.modules.delete');
 });

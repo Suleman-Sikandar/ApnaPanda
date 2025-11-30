@@ -113,7 +113,7 @@
                     <i class="bi bi-chevron-down dropdown-arrow"></i>
                 </a>
                 <div class="dropdown-submenu" id="securityDropdown">
-                    <a href="#" class="nav-subitem">
+                    <a href="{{ route('admin.modules') }}" class="nav-subitem">
                         <i class="bi bi-grid-3x3"></i>
                         <span>Modules</span>
                     </a>
