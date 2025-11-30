@@ -4,7 +4,11 @@ class DashboardService
 {
     public function index()
     {
-       return view('vendor.dashboard');
+        $data=[
+            'pageTitle' => 'Dashboard',
+            'subTitle' => 'Vendor',
+        ];
+       return view('vendor.dashboard')->with($data);
     }
    
 }

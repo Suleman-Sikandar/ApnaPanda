@@ -5,19 +5,19 @@
         </div>
         <div class="sidebar-menu">
             <div class="menu-section">Main Menu</div>
-            <a href="#" class="menu-item active">
+            <a href="{{ url('vendor/home') }}" class="menu-item {{ request()->routeIs('vendor.home') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="{{ url('vendor/products') }}" class="menu-item {{ request()->routeIs('vendor.product') ? 'active' : '' }}">
                 <i class="bi bi-box-seam"></i>
                 <span>Products</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="{{ url('vendor/orders') }}" class="menu-item {{ request()->routeIs('vendor.orders') ? 'active' : '' }}">
                 <i class="bi bi-receipt"></i>
                 <span>Orders</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="{{ url('vendor/categories') }}" class="menu-item {{ request()->routeIs('vendor.categories') ? 'active' : '' }}">
                 <i class="bi bi-tags"></i>
                 <span>Categories</span>
             </a>

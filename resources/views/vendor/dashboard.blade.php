@@ -7,6 +7,9 @@
 @section('sidebar')
     @include('vendor.include.sidebar')
 @endsection
+@section('toolbar')
+    @include('vendor.includes.toolbar')
+@endsection
 @section('content')
 <div class="container-fluid">
     <div class="row g-4 mb-4">

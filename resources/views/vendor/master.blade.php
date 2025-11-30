@@ -5,6 +5,7 @@
    @yield('sidebar')
     <div class="main-content">
        @yield('header')
+       @yield('toolbar')
         @yield('content')
     </div>
     @include('vendor.include.script')

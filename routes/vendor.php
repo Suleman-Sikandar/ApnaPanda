@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Vendor\DashboardController;
 use App\Http\Controllers\Vendor\ProfileController;
+use App\Http\Controllers\Vendor\ProductController;
+use App\Http\Controllers\Vendor\OrderController;
+use App\Http\Controllers\Vendor\CategoryController;
 
 Route::get('vendor/home', [DashboardController::class, 'index'])->name('vendor.home');
 
@@ -33,3 +36,12 @@ Route::put('vendor/password/{id}', [ProfileController::class, 'updatePassword'])
 // Face Verification
 Route::get('vendor/face-verification/{id}', [ProfileController::class, 'faceVerification'])->name('vendor.face.verification');
 Route::post('vendor/face-verification/{id}', [ProfileController::class, 'processFaceVerification']);
+
+//products
+Route::get('vendor/products', [ProductController::class, 'index'])->name('vendor.product');
+Route::post('vendor/products', [ProductController::class, 'store']);
+//Orders
+Route::get('vendor/orders', [OrderController::class, 'index'])->name('vendor.orders');
+
+//Categories
+Route::get('vendor/categories', [CategoryController::class, 'index'])->name('vendor.categories');
