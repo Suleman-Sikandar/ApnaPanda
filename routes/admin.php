@@ -9,63 +9,52 @@ use App\Http\Controllers\Admin\{
     ModuleCategoryController,
     ModuleController,
 };
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register admin routes for your application.
-| These routes are loaded by the RouteServiceProvider within a group which
-| contains the "admin" middleware group.
-|
-*/
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Admin Authentication Routes (Guest only)
-    Route::middleware('guest')->group(function () {
-        Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-        Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
+// ---------------------------
+// Admin Authentication Routes
+// ---------------------------
+Route::prefix('control')->name('control.')->group(function () {
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('Authentication', [AdminAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('Authentication', [AdminAuthController::class, 'login'])->name('submit');
     });
-
-    // Admin Logout Route (Authenticated only)
-    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout')->middleware('auth');
-
-    // // Protected Admin Routes (Authenticated only)
-    // Route::middleware('auth')->group(function () {
-    //     // Dashboard
-    //     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
-    //     // Add more admin routes here as needed
-    // });
+    Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout')->middleware('auth:admin');
 });
 
+// ---------------------------
+// Admin Panel Routes
+// ---------------------------
+Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function () {
 
-Route::prefix('admin')->group(function(){
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    //Route For Admin Roles
-    Route::get('roles', [RoleController::class, 'index'])->name('admin.role');
-    Route::post('roles', [RoleController::class, 'store'])->name('admin.role.store');
-    Route::Delete('roles/{id}', [RoleController::class, 'destroy'])->name('admin.role.destroy');
+    // Dashboard
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    //Admin User Routes
-    Route::get('user', [AdminUserController::class, 'index'])->name('admin.user');
-    Route::post('user', [AdminUserController::class, 'store'])->name('admin.user.store');
-    Route::get('user/edit/{id}', [AdminUserController::class, 'edit'])->name('admin.user.edit');
-    Route::post('user/update/{id}', [AdminUserController::class, 'update'])->name('admin.user.update');
-    Route::delete('user/delete/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
-    Route::get('user/profile/{id}', [AdminUserController::class, 'show'])->name('admin.user.show');
+    // Roles
+    Route::get('roles', [RoleController::class, 'index'])->name('role');
+    Route::post('roles', [RoleController::class, 'store'])->name('role.store');
+    Route::get('roles/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
+    Route::post('roles/update/{id}', [RoleController::class, 'update'])->name('role.update');
+    Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
 
-    //Routes for Module Categories 
-    Route::get('module-categories', [ModuleCategoryController::class, 'index'])->name('admin.module.categories');
-    Route::post('module-categories/store', [ModuleCategoryController::class, 'store'])->name('admin.module.categories.store');
-    Route::get('module-categories/edit/{id}', [ModuleCategoryController::class, 'edit'])->name('admin.module.categories.edit');
+    // Admin Users
+    Route::get('user', [AdminUserController::class, 'index'])->name('user');
+    Route::post('user', [AdminUserController::class, 'store'])->name('user.store');
+    Route::get('user/edit/{id}', [AdminUserController::class, 'edit'])->name('user.edit');
+    Route::post('user/update/{id}', [AdminUserController::class, 'update'])->name('user.update');
+    Route::delete('user/delete/{id}', [AdminUserController::class, 'destroy'])->name('user.destroy');
+    Route::get('user/profile/{id}', [AdminUserController::class, 'show'])->name('user.show');
+
+    // Module Categories
+    Route::get('module-categories', [ModuleCategoryController::class, 'index'])->name('module.categories');
+    Route::post('module-categories/store', [ModuleCategoryController::class, 'store'])->name('module.categories.store');
+    Route::get('module-categories/edit/{id}', [ModuleCategoryController::class, 'edit'])->name('module.categories.edit');
     Route::post('module-categories/update/{id}', [ModuleCategoryController::class, 'update']);
     Route::delete('module-categories/delete/{id}', [ModuleCategoryController::class, 'destroy']);
 
-    //Route For Admin Modules
-    Route::get('modules', [ModuleController::class, 'index'])->name('admin.modules');
-    Route::post('modules/store', [ModuleController::class, 'store'])->name('admin.modules.update');
-    Route::get('modules/edit/{id}', [ModuleController::class, 'edit'])->name('admin.modules.edit');
-    Route::post('modules/update/{id}', [ModuleController::class, 'update'])->name('admin.modules.update');
-    Route::delete('modules/delete/{id}', [ModuleController::class, 'destroy'])->name('admin.modules.delete');
+    // Modules
+    Route::get('modules', [ModuleController::class, 'index'])->name('modules');
+    Route::post('modules/store', [ModuleController::class, 'store'])->name('modules.store');
+    Route::get('modules/edit/{id}', [ModuleController::class, 'edit'])->name('modules.edit');
+    Route::post('modules/update/{id}', [ModuleController::class, 'update'])->name('modules.update');
+    Route::delete('modules/delete/{id}', [ModuleController::class, 'destroy'])->name('modules.delete');
 });

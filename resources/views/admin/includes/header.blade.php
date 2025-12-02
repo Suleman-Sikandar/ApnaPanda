@@ -73,14 +73,14 @@
                 <i class="bi bi-chevron-down"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-end">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="{{ url('admin/user/profile/' . Auth::guard('admin')->id()) }}">
                     <i class="bi bi-person me-2"></i> Profile
                 </a>
                 <a class="dropdown-item" href="#">
                     <i class="bi bi-gear me-2"></i> Settings
                 </a>
                 <div class="dropdown-divider"></div>
-                <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
+                <form method="POST" action="{{ route('control.logout') }}" class="m-0">
                     @csrf
                     <button type="submit" class="dropdown-item text-danger"
                         style="border: none; background: none; width: 100%; text-align: left; cursor: pointer;">
@@ -91,4 +91,3 @@
         </div>
     </div>
 </header>
-

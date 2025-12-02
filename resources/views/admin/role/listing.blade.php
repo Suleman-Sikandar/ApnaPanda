@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="admin-role-card-footer">
-                            <button class="admin-role-action-btn admin-role-btn-edit">
+                            <button class="admin-role-action-btn admin-role-btn-edit" data-id="{{ $role->id }}">
                                 <i class="bi bi-pencil"></i> Edit Role
                             </button>
                             <button class="admin-role-action-btn admin-role-btn-delete destroyRoleBtn"
@@ -78,6 +78,8 @@
             </div>
         </div>
         @include('admin.role.add')
+        <div id="editRoleContainer"></div>
+        
     </div>
 @endsection
 

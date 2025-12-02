@@ -1,0 +1,47 @@
+<?php
+
+namespace App;
+use App\Models\TblRole;
+use App\Models\TblModule;
+use App\Models\TblModuleCategory;
+use App\Models\AdminUserModel;
+use App\Models\TblAdmin;
+use App\Models\TblRolePrivillege;
+use Auth;
+use Route;
+trait HasPermissionsTrait {
+
+  public function getModulesPremissions(){
+    //echo Route::getFacadeRoot()->current()->uri(); exit;
+    $return=false;
+    $currentUri = Route::getFacadeRoot()->current()->uri();
+    $adminUserId = Auth::guard('admin')->user()->id;
+    $resultAdminRoles = AdminUserRoleModel::where('admin_ID',$adminUserId)->get();
+    if($resultAdminRoles){
+      foreach($resultAdminRoles as $rowAdminRole){
+        $result = RolePrivilgeModel::hasPermission($rowAdminRole->role_ID,$currentUri);
+        if($result)
+          $return = $result;
+      }
+    }
+    return $return;
+  }
+
+  public static function getModulesPremissionsBySlug($slug){
+    $return=false;
+    $currentUri = $slug;
+    $adminUserId = Auth::guard('admin')->user()->id;
+    $resultAdminRoles = AdminUserRoleModel::where('admin_ID',$adminUserId)->get();
+    if($resultAdminRoles){
+      foreach($resultAdminRoles as $rowAdminRole){
+        $result = RolePrivilgeModel::hasPermission($rowAdminRole->role_ID,$currentUri);
+        if($result)
+          $return = $result;
+      }
+    }
+    return $return;
+  }
+
+
+
+}

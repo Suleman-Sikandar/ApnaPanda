@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
-    // Custom search for grid layout (role cards)
+    // ============================
+    // SEARCH ROLES
+    // ============================
     $('#roleSearchInput').on('keyup', function () {
         var searchValue = $(this).val().toLowerCase();
-
         $('.admin-role-card').each(function () {
             var roleName = $(this).find('.admin-role-card-title').text().toLowerCase();
-
             if (roleName.indexOf(searchValue) > -1) {
                 $(this).fadeIn(300);
             } else {
@@ -15,7 +15,9 @@ $(document).ready(function () {
         });
     });
 
-    // Open drawer
+    // ============================
+    // OPEN ADD ROLE DRAWER
+    // ============================
     $('#roleAdd').on('click', function (e) {
         e.preventDefault();
         $('#rolesForm')[0].reset();
@@ -25,14 +27,17 @@ $(document).ready(function () {
         $('#drawerBox').addClass('drawer-show');
     });
 
-    // Submit add/edit form
-    $('#rolesForm').on('submit', function (e) {
+    // ============================
+    // SUBMIT ADD/EDIT FORM
+    // ============================
+    $(document).on('submit', '#rolesForm', function (e) {
         e.preventDefault();
         $('.form-error').text('');
+
         let formData = new FormData(this);
         let roleId = $('#role_id').val();
-        let url = roleId ? 'roles/' + roleId : 'roles';
-        let method = roleId ? 'PUT' : 'POST';
+        let url = roleId ? '/admin/roles/update/' + roleId : '/admin/roles';
+        let method = 'POST';
 
         $.ajax({
             url: url,
@@ -47,13 +52,12 @@ $(document).ready(function () {
                         icon: 'success',
                         title: 'Success!',
                         text: response.success,
-                        timer: 2000,
+                        timer: 1500,
                         showConfirmButton: false
                     });
                     closeDrawer();
                     $('#rolesForm')[0].reset();
-                    // Refresh page or dynamically append/edit row
-                    location.reload(); // simplest solution
+                    setTimeout(() => location.reload(), 1500);
                 }
             },
             error: function (xhr) {
@@ -73,7 +77,29 @@ $(document).ready(function () {
         });
     });
 
-    // Delete role
+    // ============================
+    // EDIT ROLE
+    // ============================
+    $(document).on('click', '.admin-role-btn-edit', function (e) {
+        e.preventDefault();
+        let roleId = $(this).data('id');
+
+        $.ajax({
+            url: '/admin/roles/edit/' + roleId,
+            type: 'GET',
+            success: function (response) {
+                $('#editRoleContainer').html(response); // load edit form
+                setTimeout(() => {
+                    $('#EditdrawerModal').addClass('active');
+                    $('#EditdrawerModal .drawer-box').addClass('drawer-show');
+                }, 10);
+            }
+        });
+    });
+
+    // ============================
+    // DELETE ROLE
+    // ============================
     $(document).on('click', '.destroyRoleBtn', function (e) {
         e.preventDefault();
         let id = $(this).data('id');
@@ -89,26 +115,21 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'roles/' + id,
+                    url: '/admin/roles/' + id,
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     success: function (response) {
                         if (response.status) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Success!',
+                                title: 'Deleted!',
                                 text: response.success,
-                                timer: 1500, // show for 1.5 seconds
+                                timer: 1500,
                                 showConfirmButton: false
                             });
-
                             closeDrawer();
                             $('#rolesForm')[0].reset();
-
-                            // Refresh page after 1.5s
-                            setTimeout(function () {
-                                location.reload();
-                            }, 1500);
+                            setTimeout(() => location.reload(), 1500);
                         }
                     },
                     error: function (xhr) {
@@ -119,18 +140,29 @@ $(document).ready(function () {
         });
     });
 
-    // Close drawer
-    $('.drawer-close').on('click', function () {
+    // ============================
+    // CLOSE DRAWERS
+    // ============================
+    $(document).on('click', '.drawer-close', function () {
         closeDrawer();
     });
-    $('#drawerModal').on('click', function (e) {
-        if (e.target.id === 'drawerModal') closeDrawer();
+
+    $(document).on('click', '.drawer-modal', function (e) {
+        if ($(e.target).hasClass('drawer-modal')) {
+            closeDrawer();
+        }
     });
 
 });
 
-// Close drawer function
+// ============================
+// CLOSE DRAWER FUNCTION
+// ============================
 function closeDrawer() {
-    $('#drawerBox').removeClass('drawer-show');
-    setTimeout(() => { $('#drawerModal').fadeOut(200); }, 250);
+    $('.drawer-box').removeClass('drawer-show');
+    setTimeout(() => {
+        $('.drawer-modal').removeClass('active');
+        $('#drawerModal').fadeOut(200);
+        $('#EditdrawerModal').removeClass('active');
+    }, 250);
 }

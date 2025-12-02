@@ -15,6 +15,6 @@ class TblModuleCategory extends Model
 
     public function modules()
     {
-        return $this->hasMany(TblModule::class, 'module_category_id');
+        return $this->hasMany(TblModule::class, 'module_category_id', 'id')->orderBy('display_order');
     }
 }

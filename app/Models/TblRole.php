@@ -15,4 +15,9 @@ class TblRole extends Model
     {
         return $this->hasMany(TblAdmin::class);
     }
+
+    public function modules()
+    {
+        return $this->belongsToMany(TblModule::class, 'tbl_role_privilleges', 'role_id', 'module_id');
+    }
 }

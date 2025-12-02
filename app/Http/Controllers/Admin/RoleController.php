@@ -10,7 +10,7 @@ class RoleController extends Controller
     public $roleService;
     public function __construct(RoleService $roleService)
     {
-        $this->roleService=$roleService;
+        $this->roleService = $roleService;
     }
 
     public function index()
@@ -26,5 +26,15 @@ class RoleController extends Controller
     public function destroy($id)
     {
         return $this->roleService->destroy($id);
+    }
+
+    public function edit($id)
+    {
+        return $this->roleService->edit($id);
+    }
+
+    public function update(Request $request, $id)
+    {
+        return $this->roleService->update($request, $id);
     }
 }

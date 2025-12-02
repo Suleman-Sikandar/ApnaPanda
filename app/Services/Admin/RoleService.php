@@ -1,14 +1,15 @@
 <?php
 namespace App\Services\Admin;
 
+use App\Models\TblModuleCategory;
 use App\Models\TblRole;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+
 class RoleService
 {
     public function index()
     {
-        $roles=TBlROle::orderBy('display_order', 'ASC')->get();
+        $roles = TblRole::orderBy('display_order', 'ASC')->get();
         return view('admin.role.listing', compact('roles'));
     }
 
@@ -43,22 +44,62 @@ class RoleService
         }
     }
 
+    public function edit($id)
+    {
+        $role       = TblRole::with('modules')->findOrFail($id);
+        $categories = TblModuleCategory::with('modules')->orderBy('display_order')->get();
+
+        return view('admin.role.edit', compact('role', 'categories'));
+    }
+
     public function destroy($id)
     {
-        $role=TblRole::findOrFail($id);
-        if($role)
-        {
+        $role = TblRole::findOrFail($id);
+        if ($role) {
             $role->delete();
             return response()->json([
-                'status' => true,
+                'status'  => true,
                 'success' => "Role Deleted SuccessFully",
             ]);
-        }else
-        {
+        } else {
             return response()->json([
                 'status' => false,
-                'error' => 'SomeThing Went Wrong',
+                'error'  => 'SomeThing Went Wrong',
             ]);
         }
     }
-}
+        public function update(Request $request, $id)
+        {
+            try {
+                $validate = $request->validate([
+                    'name'          => ['required', 'string', \Illuminate\Validation\Rule::unique('tbl_roles', 'name')->ignore($id)],
+                    'display_order' => ['nullable', \Illuminate\Validation\Rule::unique('tbl_roles', 'display_order')->ignore($id)],
+                    'modules'       => 'array',
+                ]);
+
+                $role                = TblRole::findOrFail($id);
+                $role->name          = $validate['name'];
+                $role->display_order = $validate['display_order'] ?? $role->display_order;
+                $role->save();
+
+                if ($request->has('modules')) {
+                    $role->modules()->sync($request->input('modules'));
+                }
+
+                return response()->json([
+                    'status'  => true,
+                    'success' => 'Role updated successfully!',
+                ]);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return response()->json([
+                    'status' => false,
+                    'errors' => $e->errors(),
+                ], 422);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => false,
+                    'error'  => $e->getMessage(),
+                ], 500);
+            }
+        }
+    }

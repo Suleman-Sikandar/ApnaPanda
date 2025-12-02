@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use App\Models\TblAdmin;
 
 class AdminAuthController extends Controller
 {
@@ -27,16 +28,15 @@ class AdminAuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Check if user exists and is an admin
         $credentials = $request->only('email', 'password');
-        
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $user = Auth::user();
-            
-            // Check if user has admin role
-            if ($user->role !== 'admin') {
-                Auth::logout();
-                
+
+        // Use the 'admin' guard here
+        if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
+            $admin = Auth::guard('admin')->user();
+
+            // Optional: Check for role or permission
+            if ($admin->role_id !== 1) { // assuming 1 = admin
+                Auth::guard('admin')->logout();
                 return back()->with('error', 'Unauthorized access. Admin credentials required.');
             }
 
@@ -55,11 +55,11 @@ class AdminAuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('control.login');
     }
 }

@@ -21,4 +21,8 @@ class TblModule extends Model
         return $this->belongsTo(TblModuleCategory::class, 'module_category_id');
     }
 
+     public function roles()
+    {
+        return $this->belongsToMany(TblRole::class, 'tbl_role_privilleges', 'module_id', 'role_id');
+    }
 }

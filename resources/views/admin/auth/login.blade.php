@@ -71,7 +71,7 @@
                 <div class="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5 rounded-3xl"></div>
                 
                 <div class="relative bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
-                    <form method="POST" action="{{ route('admin.login.submit') }}" class="space-y-6">
+                    <form method="POST" action="{{ route('control.submit') }}" class="space-y-6">
                         @csrf
 
                         <!-- Email Address -->
