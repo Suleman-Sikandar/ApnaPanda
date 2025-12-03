@@ -11,33 +11,23 @@ use Illuminate\Support\Facades\Auth;
  */
 function hasPermission($slug)
 {
-    // Check if user is authenticated
-    if (!Auth::guard('admin')->check()) {
+        if (!Auth::guard('admin')->check()) {
         return false;
     }
 
     $admin = Auth::guard('admin')->user();
-    
-    // Get all roles for this admin user
     $roles = $admin->roles;
-    
     if ($roles->isEmpty()) {
         return false;
     }
-
-    // Check if any of the user's roles has access to this module
     foreach ($roles as $role) {
-        // Get all modules for this role
         $modules = $role->modules;
-        
         foreach ($modules as $module) {
-            // Check if module route matches the slug
             if ($module->route === $slug || $module->module_name === $slug) {
                 return true;
             }
         }
     }
-
     return false;
 }
 
@@ -70,7 +60,6 @@ function getUserModules()
         $modules = $modules->merge($role->modules);
     }
 
-    // Remove duplicates based on module ID
     return $modules->unique('id');
 }
 
@@ -93,7 +82,7 @@ function hasAnyPermission(array $slugs)
 /**
  * Check if user has all of the specified permissions
  * 
- * @param array $slugs Array of route slugs
+ * @param array 
  * @return bool
  */
 function hasAllPermissions(array $slugs)
@@ -110,8 +99,8 @@ function hasAllPermissions(array $slugs)
  * Validate permissions - checks if user has access to a module
  * This is an alias for hasPermission() for backward compatibility
  * 
- * @param string $slug The module/route slug to check
- * @return bool True if user has permission, false otherwise
+ * @param string 
+ * @return bool 
  */
 function validatePermissions($slug)
 {

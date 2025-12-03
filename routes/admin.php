@@ -1,14 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{
-    DashboardController,
-    AdminAuthController,
-    RoleController,
-    AdminUserController,
-    ModuleCategoryController,
-    ModuleController,
-};
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ModuleCategoryController;
+use App\Http\Controllers\Admin\ModuleController;
+use App\Http\Controllers\Admin\RoleController;use Illuminate\Support\Facades\Route;
 
 // ---------------------------
 // Admin Authentication Routes
@@ -24,10 +21,9 @@ Route::prefix('control')->name('control.')->group(function () {
 // ---------------------------
 // Admin Panel Routes
 // ---------------------------
-Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function () {
-
-    // Dashboard
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Dashboard
+Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(function () {
 
     // Roles
     Route::get('roles', [RoleController::class, 'index'])->name('role');
@@ -58,4 +54,3 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::post('modules/update/{id}', [ModuleController::class, 'update'])->name('modules.update');
     Route::delete('modules/delete/{id}', [ModuleController::class, 'destroy'])->name('modules.delete');
 });
- 
