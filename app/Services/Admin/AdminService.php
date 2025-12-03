@@ -7,12 +7,12 @@ use App\Models\TblRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
+
 class AdminService
 {
     public function index()
     {
-        $users=TblAdmin::with('role')->get();
+        $users = TblAdmin::with('roles')->get(); // updated
         $roles = TblRole::all();
         return view('admin.user.listing', compact('roles', 'users'));
     }
@@ -27,8 +27,12 @@ class AdminService
                 'phone'         => 'required|string|min:11|max:15',
                 'password'      => 'required|string|min:8|max:50',
                 'profile_image' => 'nullable|file|image|mimes:jpg,jpeg,png',
-                'role_id'       => 'nullable|exists:tbl_roles,id',
+
+                // updated → multiple roles stored in pivot
+                'role_ids'      => 'nullable|array',
+                'role_ids.*'    => 'exists:tbl_roles,id',
             ]);
+
             Log::info('Validation Passed');
 
             $user = new TblAdmin();
@@ -36,7 +40,6 @@ class AdminService
             $user->email    = $validate['email'];
             $user->phone    = $validate['phone'];
             $user->password = Hash::make($validate['password']);
-            $user->role_id  = $validate['role_id'] ?? null;
 
             if ($request->hasFile('profile_image')) {
                 $image     = $request->file('profile_image');
@@ -46,7 +49,13 @@ class AdminService
             }
 
             $user->save();
-            Log::info('User Saved:', $user->toArray());
+
+            // attach roles to pivot table
+            if (!empty($validate['role_ids'])) {
+                $user->roles()->sync($validate['role_ids']);
+            }
+
+            Log::info('User Saved with Roles:', $user->toArray());
 
             return response()->json([
                 'status'  => true,
@@ -54,12 +63,13 @@ class AdminService
                 'data'    => $user
             ], 201);
 
-         } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation Error:', $e->errors());
             return response()->json([
                 'status' => false,
                 'errors' => $e->errors(),
             ], 422);
+
         } catch (\Exception $e) {
             Log::error('General Error:', ['message' => $e->getMessage()]);
             return response()->json([
@@ -71,24 +81,24 @@ class AdminService
 
     public function edit($id)
     {
-       $user=TblAdmin::with('role')->find($id);
-       if($user)
-       {
-        return response()->json([
-            'status' => true,
-            'success' => 'Data Fetched SuccessFully',
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone,
-            'role_id' => $user->role_id,
-            'profile_image' => $user->profile_image,
-        ]);
-       }else{
-        return response()->json([
-            'status' => false,
-            'error' => 'Something Went Wrong',
-        ]);
-       }
+        $user = TblAdmin::with('roles')->find($id);
+
+        if ($user) {
+            return response()->json([
+                'status' => true,
+                'success' => 'Data Fetched Successfully',
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'role_ids' => $user->roles->pluck('id'), // updated
+                'profile_image' => $user->profile_image,
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'error' => 'User not found',
+            ]);
+        }
     }
 
     public function update(Request $request, $id)
@@ -99,10 +109,14 @@ class AdminService
                 'email'         => 'required|email|unique:tbl_admin,email,' . $id,
                 'phone'         => 'required|string|min:11|max:15',
                 'profile_image' => 'nullable|file|image|mimes:jpg,jpeg,png',
-                'role_id'       => 'nullable|exists:tbl_roles,id',
+
+                // updated pivot roles
+                'role_ids'      => 'nullable|array',
+                'role_ids.*'    => 'exists:tbl_roles,id',
             ]);
 
             $user = TblAdmin::find($id);
+
             if (!$user) {
                 return response()->json([
                     'status' => false,
@@ -110,10 +124,9 @@ class AdminService
                 ], 404);
             }
 
-            $user->name     = $validate['name'];
-            $user->email    = $validate['email'];
-            $user->phone    = $validate['phone'];
-            $user->role_id  = $validate['role_id'] ?? null;
+            $user->name = $validate['name'];
+            $user->email = $validate['email'];
+            $user->phone = $validate['phone'];
 
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
@@ -128,17 +141,23 @@ class AdminService
 
             $user->save();
 
+            // sync pivot roles
+            if (isset($validate['role_ids'])) {
+                $user->roles()->sync($validate['role_ids']);
+            }
+
             return response()->json([
                 'status'  => true,
                 'success' => 'Admin updated successfully!',
                 'data'    => $user
             ], 200);
 
-         } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'status' => false,
                 'errors' => $e->errors(),
             ], 422);
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -151,8 +170,13 @@ class AdminService
     {
         try {
             $user = TblAdmin::find($id);
+
             if ($user) {
+                // delete pivot roles also automatically
+                $user->roles()->detach();
+
                 $user->delete();
+
                 return response()->json([
                     'status' => true,
                     'success' => 'Admin deleted successfully!',
@@ -173,7 +197,7 @@ class AdminService
 
     public function show($id)
     {
-        $user = TblAdmin::with('role')->findOrFail($id);
+        $user = TblAdmin::with('roles')->findOrFail($id);
         return view('admin.user.profile', compact('user'));
     }
 }

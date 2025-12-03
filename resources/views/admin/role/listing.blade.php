@@ -48,7 +48,7 @@
                         <span class="admin-role-status-badge admin-role-status-active">Active</span>
 
                         <div class="admin-role-card-header">
-                            <h3 class="admin-role-card-title">{{ $role->name }}</h3>
+                            <h3 class="admin-role-card-title">{{ $role->roles->name }}</h3>
                             <p class="admin-role-card-subtitle">Total modules assign to this role: 182</p>
                         </div>
 

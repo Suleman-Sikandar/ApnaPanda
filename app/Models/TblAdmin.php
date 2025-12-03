@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,8 +24,8 @@ class TblAdmin extends Authenticatable
         'remember_token',
     ];
 
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(TblROle::class);
+        return $this->belongsToMany(TblRole::class, 'tbl_admin_user_roles', 'user_ID', 'role_ID');
     }
 }
