@@ -14,11 +14,11 @@ class TblRole extends Model
 
     public function admins()
     {
-        return $this->belongsToMany(TblAdmin::class,'tbl_admin_user_roles','role_ID','admin_ID');
+        return $this->belongsToMany(TblAdmin::class,'tbl_admin_user_roles','role_ID','user_ID');
     }
 
     public function modules()
     {
-        return $this->belongsToMany(TblModule::class,'tbl_role_privillege','role_id','module_id');
+        return $this->belongsToMany(TblModule::class,'tbl_role_privilleges','role_id','module_id');
     }
 }

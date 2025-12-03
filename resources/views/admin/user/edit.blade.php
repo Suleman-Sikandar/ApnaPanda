@@ -49,7 +49,7 @@
 
                 <div class="drawer-form-group">
                     <label for="role_id">Assign Role</label>
-                    <select name="role_id" id="edit_admin_role" class="select2">
+                    <select name="role_ids[]" id="edit_admin_role" class="select2" multiple>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}">{{ $role->name }}</option>
                         @endforeach

@@ -53,7 +53,13 @@
                         </tr>
                         <tr>
                             <th>Role</th>
-                            <td>{{ $user->role->name ?? 'N/A' }}</td>
+                            <td>
+                                @forelse($user->roles as $role)
+                                    <span class="badge bg-primary">{{ $role->name }}</span>
+                                @empty
+                                    N/A
+                                @endforelse
+                            </td>
                         </tr>
                         <tr>
                             <th>Created At</th>

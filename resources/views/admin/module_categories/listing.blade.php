@@ -21,12 +21,13 @@
                     </p>
                 </div>
             </div>
-
+        @if(validatePermissions('admin/module-categories/store'))
             <div class="role-header-actions">
                 <button class="role-btn-primary-gradient" id="moduleCatAdd">
                     <i class="bi bi-plus-circle"></i>Add New Category
                 </button>
             </div>
+        @endif
         </div>
 
         <!-- Roles Table Card -->
@@ -75,14 +76,18 @@
                             <td> {{ $cat->created_at->format('y-m-d') }}</td>
                             <td>
                                 <div class="role-action-buttons">
+                                @if(validatePermissions('admin/module-categories/edit/{id}'))
                                     <button class="role-btn-icon role-btn-edit editModuleCategory" title="Edit Category"
                                         data-id="{{ $cat->id }}">
                                         <i class="bi bi-pencil"></i>
                                     </button>
+                                @endif
+                                @if(validatePermissions('admin/module-categories/delete/{id}'))
                                     <button class="role-btn-icon role-btn-delete deleteModuleCategory"
                                         title="Delete Category" data-id="{{ $cat->id }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
+                                @endif
                                 </div>
                             </td>
                         </tr>

@@ -54,18 +54,25 @@ class RoleService
 
     public function destroy($id)
     {
-        $role = TblRole::findOrFail($id);
-        if ($role) {
+        try {
+            $role = TblRole::findOrFail($id);
+            
+            \App\Models\TblAdmin::where('role_id', $id)->update(['role_id' => null]);
+            
+            $role->modules()->detach();
+            
+            $role->admins()->detach();
             $role->delete();
+            
             return response()->json([
                 'status'  => true,
-                'success' => "Role Deleted SuccessFully",
+                'success' => "Role deleted successfully. Admin users have been unassigned from this role.",
             ]);
-        } else {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'error'  => 'SomeThing Went Wrong',
-            ]);
+                'error'  => 'Failed to delete role: ' . $e->getMessage(),
+            ], 500);
         }
     }
         public function update(Request $request, $id)
@@ -82,9 +89,7 @@ class RoleService
                 $role->display_order = $validate['display_order'] ?? $role->display_order;
                 $role->save();
 
-                if ($request->has('modules')) {
-                    $role->modules()->sync($request->input('modules'));
-                }
+                $role->modules()->sync($request->input('modules', []));
 
                 return response()->json([
                     'status'  => true,

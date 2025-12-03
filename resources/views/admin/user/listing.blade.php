@@ -23,9 +23,11 @@
             </div>
 
             <div class="role-header-actions">
+                @if(validatePermissions('admin/user'))
                 <button class="role-btn-primary-gradient" id="addminAdd">
                     <i class="bi bi-plus-circle"></i>Add New Admin
                 </button>
+                @endif
             </div>
         </div>
 
@@ -61,7 +63,11 @@
                             <tr>
                                 <td>{{ $user->id }}</td>
                                 <td><strong>{{ $user->name }}</strong></td>
-                                <td>{{ $user->role->name }}</td>
+                                <td>
+                                    <span class="badge bg-primary" style="cursor: pointer;" onclick="showUserRoles({{ $user->id }}, '{{ $user->name }}', {{ json_encode($user->roles->pluck('name')) }})">
+                                        {{ $user->roles->count() }} Roles
+                                    </span>
+                                </td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     {{ $user->phone }}
@@ -74,19 +80,24 @@
                                 <td> {{ $user->created_at->format('y-m-d') }}</td>
                                 <td>
                                     <div class="role-action-buttons">
+                                        @if(validatePermissions('admin/user/profile/{id}'))
                                         <button class="role-btn-icon role-btn-view" title="View Admin"
                                             onclick="window.location='{{ route('admin.user.show', $user->id) }}'">
                                             <i class="bi bi-eye"></i>
                                         </button>
-
+                                        @endif
+                                        @if(validatePermissions('admin/user/edit/{id}'))
                                         <button class="role-btn-icon role-btn-edit editUser" title="Edit Admin"
                                             data-id="{{ $user->id }}">
                                             <i class="bi bi-pencil"></i>
                                         </button>
+                                        @endif
+                                        @if(validatePermissions('admin/user/delete/{id}'))
                                         <button class="role-btn-icon role-btn-delete" title="Delete Admin"
                                             data-id="{{ $user->id }}">
                                             <i class="bi bi-trash"></i>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -98,6 +109,23 @@
         </div>
         @include('admin.user.add')
         @include('admin.user.edit')
+
+        <!-- Role Details Modal -->
+        <div class="modal fade" id="roleDetailsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="roleDetailsTitle">User Roles</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="roleDetailsList" class="list-group">
+                            <!-- Roles will be populated here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -107,4 +135,22 @@
 
 @push('scripts')
     <script src="{{ asset('admin/js/admin.js') }}"></script>
+    <script>
+        function showUserRoles(userId, userName, roles) {
+            const modal = new bootstrap.Modal(document.getElementById('roleDetailsModal'));
+            document.getElementById('roleDetailsTitle').innerText = `${userName}'s Roles`;
+            const list = document.getElementById('roleDetailsList');
+            list.innerHTML = '';
+            
+            if (roles.length === 0) {
+                list.innerHTML = '<li class="list-group-item">No roles assigned</li>';
+            } else {
+                roles.forEach(role => {
+                    list.innerHTML += `<li class="list-group-item">${role}</li>`;
+                });
+            }
+            
+            modal.show();
+        }
+    </script>
 @endpush

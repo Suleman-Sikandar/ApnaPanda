@@ -148,7 +148,7 @@ $(document).ready(function () {
     // =======================
     // DELETE MODULE CATEGORY
     // =======================
-    $('.    ').on('click', function (e) {
+    $('.deleteModuleCategory').on('click', function (e) {
         e.preventDefault();
 
         let id = $(this).data('id');

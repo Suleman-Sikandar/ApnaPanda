@@ -58,3 +58,4 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::post('modules/update/{id}', [ModuleController::class, 'update'])->name('modules.update');
     Route::delete('modules/delete/{id}', [ModuleController::class, 'destroy'])->name('modules.delete');
 });
+ 

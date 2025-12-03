@@ -30,7 +30,7 @@ $(document).ready(function () {
     // ============================
     // SUBMIT ADD/EDIT FORM
     // ============================
-    $(document).on('submit', '#rolesForm', function (e) {
+    $(document).off('submit', '#rolesForm').on('submit', '#rolesForm', function (e) {
         e.preventDefault();
         $('.form-error').text('');
 
@@ -80,19 +80,31 @@ $(document).ready(function () {
     // ============================
     // EDIT ROLE
     // ============================
-    $(document).on('click', '.admin-role-btn-edit', function (e) {
+    $(document).off('click', '.admin-role-btn-edit').on('click', '.admin-role-btn-edit', function (e) {
         e.preventDefault();
         let roleId = $(this).data('id');
+
+        // Prevent multiple clicks
+        if ($(this).data('loading')) return;
+        $(this).data('loading', true);
 
         $.ajax({
             url: '/admin/roles/edit/' + roleId,
             type: 'GET',
             success: function (response) {
                 $('#editRoleContainer').html(response); // load edit form
+                
+                // Ensure we don't have duplicate modals or lingering classes
+                $('.drawer-overlay').removeClass('active');
+                $('.drawer').removeClass('drawer-show');
+
                 setTimeout(() => {
                     $('#EditdrawerModal').addClass('active');
-                    $('#EditdrawerModal .drawer-box').addClass('drawer-show');
+                    $('#EditdrawerModal .drawer').addClass('drawer-show'); // Fixed selector from .drawer-box to .drawer based on blade file
                 }, 10);
+            },
+            complete: () => {
+                $(this).data('loading', false);
             }
         });
     });
@@ -100,7 +112,7 @@ $(document).ready(function () {
     // ============================
     // DELETE ROLE
     // ============================
-    $(document).on('click', '.destroyRoleBtn', function (e) {
+    $(document).off('click', '.destroyRoleBtn').on('click', '.destroyRoleBtn', function (e) {
         e.preventDefault();
         let id = $(this).data('id');
 
@@ -143,12 +155,12 @@ $(document).ready(function () {
     // ============================
     // CLOSE DRAWERS
     // ============================
-    $(document).on('click', '.drawer-close', function () {
+    $(document).off('click', '.drawer-close').on('click', '.drawer-close', function () {
         closeDrawer();
     });
 
-    $(document).on('click', '.drawer-modal', function (e) {
-        if ($(e.target).hasClass('drawer-modal')) {
+    $(document).off('click', '.drawer-overlay').on('click', '.drawer-overlay', function (e) {
+         if (e.target === this) {
             closeDrawer();
         }
     });

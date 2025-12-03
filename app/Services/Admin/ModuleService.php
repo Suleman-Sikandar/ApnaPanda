@@ -27,10 +27,10 @@ class ModuleService
                 'module_category_id' => 'required|exists:tbl_module_categories,id',
                 'module_name'        => 'required|string|max:100|unique:tbl_modules,module_name',
                 'route'              => 'nullable|string|unique:tbl_modules,route',
-                'show_in_menu'       => 'required|boolean',
+                'show_in_menu'       => 'required|in:0,1',
                 'icon_class'         => 'nullable|string|max:50',
                 'display_order'      => 'nullable|integer|unique:tbl_modules,display_order',
-                'is_active'          => 'required|boolean',
+                'is_active'          => 'required|in:0,1',
             ]);
 
             $module = TblModule::create($validate);
@@ -88,10 +88,10 @@ class ModuleService
                 'module_category_id' => 'required|exists:tbl_module_categories,id',
                 'module_name'        => "required|string|max:100|unique:tbl_modules,module_name,$id",
                 'route'              => "nullable|string|unique:tbl_modules,route,$id",
-                'show_in_menu'       => 'required|boolean',
+                'show_in_menu'       => 'required|in:0,1',
                 'icon_class'         => 'nullable|string|max:50',
                 'display_order'      => "nullable|integer|unique:tbl_modules,display_order,$id",
-                'is_active'          => 'required|boolean',
+                'is_active'          => 'required|in:0,1',
             ]);
 
             $module->update($validate);

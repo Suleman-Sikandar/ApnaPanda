@@ -21,12 +21,13 @@
                     </p>
                 </div>
             </div>
-
+        @if(validatePermissions('admin/roles'))
             <div class="role-header-actions">
                 <button class="role-btn-primary-gradient" id="roleAdd">
                     <i class="bi bi-plus-circle"></i>Add New Role
                 </button>
             </div>
+        @endif
         </div>
 
         <!-- Roles Table Card -->
@@ -48,29 +49,36 @@
                         <span class="admin-role-status-badge admin-role-status-active">Active</span>
 
                         <div class="admin-role-card-header">
-                            <h3 class="admin-role-card-title">{{ $role->roles->name }}</h3>
-                            <p class="admin-role-card-subtitle">Total modules assign to this role: 182</p>
+                            <h3 class="admin-role-card-title">{{ $role->name }}</h3>
+                            <p class="a dmin-role-card-subtitle">Total modules assign to this role: {{ $role->modules->count() }}</p>
                         </div>
 
                         <div class="admin-role-modules-section">
                             <span class="admin-role-modules-label">Modules:</span>
                             <ul class="admin-role-modules-list">
-                                <li class="admin-role-module-item">Activity Types</li>
-                                <li class="admin-role-module-item">Add Activity</li>
-                                <li class="admin-role-module-item">Edit Activity</li>
-                                <li class="admin-role-module-item">Update Activity Status</li>
+                                @forelse($role->modules->take(4) as $module)
+                                    <li class="admin-role-module-item">{{ $module->module_name }}</li>
+                                @empty
+                                    <li class="admin-role-module-item">No modules assigned</li>
+                                @endforelse
+                                @if($role->modules->count() > 4)
+                                    <li class="admin-role-module-item">+{{ $role->modules->count() - 4 }} more</li>
+                                @endif
                             </ul>
                         </div>
 
                         <div class="admin-role-card-footer">
+                            @if(validatePermissions('admin/roles/edit/{id}'))
                             <button class="admin-role-action-btn admin-role-btn-edit" data-id="{{ $role->id }}">
                                 <i class="bi bi-pencil"></i> Edit Role
                             </button>
+                            @endif
+                            @if(validatePermissions('admin/roles/{id}'))
                             <button class="admin-role-action-btn admin-role-btn-delete destroyRoleBtn"
                                 data-id="{{ $role->id }}">
                                 <i class="bi bi-trash"></i> Delete Role
                             </button>
-
+                            @endif
                         </div>
                     </div>
                 @endforeach

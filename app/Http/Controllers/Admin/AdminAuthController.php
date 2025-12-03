@@ -33,13 +33,6 @@ class AdminAuthController extends Controller
         // Use the 'admin' guard here
         if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             $admin = Auth::guard('admin')->user();
-
-            // Optional: Check for role or permission
-            if ($admin->role_id !== 1) { // assuming 1 = admin
-                Auth::guard('admin')->logout();
-                return back()->with('error', 'Unauthorized access. Admin credentials required.');
-            }
-
             $request->session()->regenerate();
 
             return redirect()->intended(route('admin.dashboard'));
