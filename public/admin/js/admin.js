@@ -241,3 +241,57 @@ function closeEditDrawer() {
     $('#EditdrawerBox').removeClass('drawer-show');
     setTimeout(() => $('#EditdrawerModal').fadeOut(200), 250);
 }
+
+
+// Vendor Approve function 
+// Vendor Approve function
+$(document).ready(function() {
+    $('.form').on('submit', function(e) {
+        e.preventDefault(); // prevent default form submission
+
+        let form = $(this);
+        let url = form.attr('action');
+
+        // Check if URL contains 'approve'
+        if (url.indexOf('/approve/') !== -1) {
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to approve this vendor!",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, approve!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText); // check the error
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops!',
+                                text: 'Something went wrong. Please try again.'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+

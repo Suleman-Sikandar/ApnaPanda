@@ -5,7 +5,9 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ModuleCategoryController;
 use App\Http\Controllers\Admin\ModuleController;
-use App\Http\Controllers\Admin\RoleController;use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\VendorController;
+use Illuminate\Support\Facades\Route;
 
 // ---------------------------
 // Admin Authentication Routes
@@ -53,4 +55,15 @@ Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(functi
     Route::get('modules/edit/{id}', [ModuleController::class, 'edit'])->name('modules.edit');
     Route::post('modules/update/{id}', [ModuleController::class, 'update'])->name('modules.update');
     Route::delete('modules/delete/{id}', [ModuleController::class, 'destroy'])->name('modules.delete');
+    //Vendors
+    Route::get('vendors', [VendorController::class, 'index'])->name('vendors');
+    Route::get('vendors/profile/{id}', [VendorController::class, 'show'])->name('vendors.show');
+    Route::get('vendors/approve/{id}', [VendorController::class, 'approve'])->name('vendors.approve');
+    Route::Post('vendors/approve/{id}', [VendorController::class, 'approve'])->name('vendors.approve');
+    Route::get('vendors/reject/{id}', [VendorController::class, 'reject'])->name('vendors.reject');
+    Route::Post('vendors/reject/{id}', [VendorController::class, 'rejectUpdate'])->name('vendors.reject');
+    Route::get('vendors/suspend/{id}', [VendorController::class, 'suspend'])->name('vendors.suspend');
+    Route::Post('vendors/suspend/{id}', [VendorController::class, 'suspendUpdate'])->name('vendors.suspend');
+    Route::get('vendors/pending-approval', [VendorController::class, 'pendingApproval'])->name('vendors.pending');
 });
+ 

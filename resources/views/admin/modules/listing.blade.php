@@ -31,6 +31,7 @@
             </div>
         </div>
 
+        
         <!-- Modules Grid -->
         <div class="admin-roles-grid-container">
             @foreach ($modules as $mod)
@@ -79,7 +80,7 @@
         @include('admin.modules.add')
         @include('admin.modules.edit')
 
-    </div>
+    </div> 
 @endsection
 
 @section('footer')

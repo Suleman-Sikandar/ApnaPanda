@@ -19,7 +19,7 @@
                 <span>Analytics</span>
             </a>
         </div>
-
+        {{-- 
         <div class="nav-section">
             <span class="nav-section-title">E-Commerce</span>
             <a href="#" class="nav-item">
@@ -39,26 +39,30 @@
                 <i class="bi bi-people"></i>
                 <span>Customers</span>
             </a>
-        </div>
+        </div> --}}
 
         <div class="nav-section">
             <span class="nav-section-title">Vendors</span>
-            <a href="#" class="nav-item">
+            @if(validatePermissions('admin/vendors'))
+            <a href="{{ route('admin.vendors') }}" class="nav-item {{ request()->routeIs('admin.vendors') ? 'active' : '' }}">
                 <i class="bi bi-shop"></i>
                 <span>All Vendors</span>
             </a>
-            <a href="#" class="nav-item">
+            @endif
+            @if(validatePermissions('admin/vendors/pending-approval'))
+            <a href="{{ route('admin.vendors.pending') }}" class="nav-item {{ request()->routeIs('admin.vendors.pending') ? 'active' : '' }}">
                 <i class="bi bi-clock-history"></i>
                 <span>Pending Approval</span>
-                <span class="badge bg-warning">5</span>
+                {{-- <span class="badge bg-warning">5</span> --}}
             </a>
+            @endif
             <a href="#" class="nav-item">
                 <i class="bi bi-star"></i>
                 <span>Top Vendors</span>
             </a>
         </div>
 
-        <div class="nav-section">
+        {{-- <div class="nav-section">
             <span class="nav-section-title">Management</span>
             <a href="#" class="nav-item">
                 <i class="bi bi-currency-dollar"></i>
@@ -76,7 +80,7 @@
                 <i class="bi bi-ticket-perforated"></i>
                 <span>Coupons</span>
             </a>
-        </div>
+        </div> --}}
 
         <div class="nav-section">
             <span class="nav-section-title">Settings</span>
@@ -87,40 +91,51 @@
 
             <!-- Admin Dropdown -->
             <div class="nav-item-dropdown">
-                <a href="#" class="nav-item {{ request()->routeIs('admin.role') || request()->routeIs('admin.user') ? 'active' : '' }}"
+                <a href="#"
+                    class="nav-item {{ request()->routeIs('admin.role') || request()->routeIs('admin.user') ? 'active' : '' }}"
                     onclick="toggleDropdown(event, 'adminDropdown')">
                     <i class="bi bi-person-badge"></i>
                     <span>Admin</span>
                     <i class="bi bi-chevron-down dropdown-arrow"></i>
                 </a>
                 <div class="dropdown-submenu" id="adminDropdown">
-                    <a href="{{ route('admin.user') }}" class="nav-subitem">
-                        <i class="bi bi-people"></i>
-                        <span>Admin Users</span>
-                    </a>
-                    <a href="{{ route('admin.role') }}" class="nav-subitem">
-                        <i class="bi bi-people"></i>
-                        <span>Admin Roles</span>
-                    </a>
+                    @if (validatePermissions('admin/user'))
+                        <a href="{{ route('admin.user') }}" class="nav-subitem">
+                            <i class="bi bi-people"></i>
+                            <span>Admin Users</span>
+                        </a>
+                    @endif
+                    @if (validatePermissions('admin/roles'))
+                        <a href="{{ route('admin.role') }}" class="nav-subitem">
+                            <i class="bi bi-people"></i>
+                            <span>Admin Roles</span>
+                        </a>
+                    @endif
                 </div>
             </div>
 
             <!-- Security Dropdown -->
             <div class="nav-item-dropdown">
-                <a href="#" class="nav-item" onclick="toggleDropdown(event, 'securityDropdown')">
+                <a href="#"
+                    class="nav-item {{ request()->routeIs('admin.modules') || request()->routeIs('admin.module.categories') ? 'active' : '' }}"
+                    onclick="toggleDropdown(event, 'securityDropdown')">
                     <i class="bi bi-shield-check"></i>
                     <span>Security</span>
                     <i class="bi bi-chevron-down dropdown-arrow"></i>
                 </a>
                 <div class="dropdown-submenu" id="securityDropdown">
-                    <a href="{{ route('admin.modules') }}" class="nav-subitem">
-                        <i class="bi bi-grid-3x3"></i>
-                        <span>Modules</span>
-                    </a>
-                    <a href="{{ route('admin.module.categories') }}" class="nav-subitem">
-                        <i class="bi bi-folder"></i>
-                        <span>Module Categories</span>
-                    </a>
+                    @if (validatePermissions('admin/modules'))
+                        <a href="{{ route('admin.modules') }}" class="nav-subitem">
+                            <i class="bi bi-grid-3x3"></i>
+                            <span>Modules</span>
+                        </a>
+                    @endif
+                    @if (validatePermissions('admin/module-categories'))
+                        <a href="{{ route('admin.module.categories') }}" class="nav-subitem">
+                            <i class="bi bi-folder"></i>
+                            <span>Module Categories</span>
+                        </a>
+                    @endif
                 </div>
             </div>
 

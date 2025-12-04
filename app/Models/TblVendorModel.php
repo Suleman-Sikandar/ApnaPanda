@@ -44,5 +44,15 @@ class TblVendorModel extends Model
         'longitude',
         'current_step',
         'is_face_verified',
+        'status',
+        'approved_by_admin_id',
+        'status_updated_at',
+        'rejection_reason',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }
+
