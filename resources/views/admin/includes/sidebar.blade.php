@@ -19,27 +19,30 @@
                 <span>Analytics</span>
             </a>
         </div>
-        {{-- 
+        
         <div class="nav-section">
             <span class="nav-section-title">E-Commerce</span>
-            <a href="#" class="nav-item">
+            {{-- <a href="#" class="nav-item">
                 <i class="bi bi-cart"></i>
                 <span>Orders</span>
                 <span class="badge bg-primary">24</span>
-            </a>
-            <a href="#" class="nav-item">
+            </a> --}}
+            @if (validatePermissions('admin/product-categories'))
+                <a href="{{ route('admin.product.categories') }}" class="nav-item {{ request()->routeIs('admin.product.categories') ? 'active' : '' }}">
                 <i class="bi bi-box-seam"></i>
-                <span>Products</span>
+                <span>Product Categories</span>
             </a>
-            <a href="#" class="nav-item">
+            @endif
+            
+            {{-- <a href="#" class="nav-item">
                 <i class="bi bi-grid-3x3-gap"></i>
                 <span>Categories</span>
             </a>
             <a href="#" class="nav-item">
                 <i class="bi bi-people"></i>
                 <span>Customers</span>
-            </a>
-        </div> --}}
+            </a> --}}
+        </div>
 
         <div class="nav-section">
             <span class="nav-section-title">Vendors</span>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ModuleCategoryController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------
@@ -65,5 +66,11 @@ Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(functi
     Route::get('vendors/suspend/{id}', [VendorController::class, 'suspend'])->name('vendors.suspend');
     Route::Post('vendors/suspend/{id}', [VendorController::class, 'suspendUpdate'])->name('vendors.suspend');
     Route::get('vendors/pending-approval', [VendorController::class, 'pendingApproval'])->name('vendors.pending');
+    //Product Categories
+    Route::get('product-categories', [ProductCategoryController::class, 'index'])->name('product.categories');
+    Route::post('product-categories/store', [ProductCategoryController::class, 'store'])->name('product.categories.store');
+    Route::get('product-categories/edit/{id}', [ProductCategoryController::class, 'edit'])->name('product.categories.edit');
+    Route::post('product-categories/update/{id}', [ProductCategoryController::class, 'update']);
+    Route::delete('product-categories/delete/{id}', [ProductCategoryController::class, 'destroy']);
 });
  
