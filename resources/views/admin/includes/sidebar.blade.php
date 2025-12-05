@@ -29,16 +29,17 @@
             </a> --}}
             @if (validatePermissions('admin/product-categories'))
                 <a href="{{ route('admin.product.categories') }}" class="nav-item {{ request()->routeIs('admin.product.categories') ? 'active' : '' }}">
-                <i class="bi bi-box-seam"></i>
+                <i class="bi bi-grid-3x3-gap"></i>
                 <span>Product Categories</span>
             </a>
             @endif
-            
-            {{-- <a href="#" class="nav-item">
-                <i class="bi bi-grid-3x3-gap"></i>
-                <span>Categories</span>
+            @if(validatePermissions('admin/products'))
+           <a href="{{ route('admin.products') }}" class="nav-item {{ request()->routeIs('admin.products') ? 'active' : '' }}">
+                <i class="bi bi-box-seam"></i>
+                <span>Products</span>
             </a>
-            <a href="#" class="nav-item">
+            @endif
+              {{--<a href="#" class="nav-item">
                 <i class="bi bi-people"></i>
                 <span>Customers</span>
             </a> --}}

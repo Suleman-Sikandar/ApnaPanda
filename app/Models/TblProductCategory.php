@@ -10,4 +10,9 @@ class TblProductCategory extends Model
     protected $fillable=[
         'category_name'
     ];
+
+    public function products()
+    {
+        return $this->hasMany(TblProduct::class, 'category_id');
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------
@@ -72,5 +73,19 @@ Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(functi
     Route::get('product-categories/edit/{id}', [ProductCategoryController::class, 'edit'])->name('product.categories.edit');
     Route::post('product-categories/update/{id}', [ProductCategoryController::class, 'update']);
     Route::delete('product-categories/delete/{id}', [ProductCategoryController::class, 'destroy']);
+    //products
+    Route::get('products', [ProductController::class, 'index'])->name('products');
+    Route::post('products/store', [ProductController::class, 'store'])->name('products.store');
+    Route::get('products/edit/{id}', [ProductController::class, 'edit'])->name('products.edit');
+    Route::post('products/update/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::get('products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    // Product Status Actions
+    Route::post('products/active/{id}', [ProductController::class, 'active'])->name('products.active');
+    Route::post('products/out_of_stock/{id}', [ProductController::class, 'outOfStock'])->name('products.outOfStock');
+    Route::post('products/pending/{id}', [ProductController::class, 'pending'])->name('products.pending');
+    Route::get('products/ban/{id}', [ProductController::class, 'ban'])->name('products.ban');
+    Route::post('products/ban/{id}', [ProductController::class, 'banUpdate'])->name('products.banUpdate');
+    Route::get('products-detail/{id}', [ProductController::class, 'show'])->name('products.detail');
+    Route::get('products/image/delete/{id}', [ProductController::class, 'deleteImage'])->name('products.image.delete');
 });
  

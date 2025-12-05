@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class TblVendorModel extends Model
 {
     protected $table = 'tbl_vendors';
- 
+
     protected $fillable = [
         'user_id',
         'alternative_phone',
@@ -54,5 +53,9 @@ class TblVendorModel extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-}
 
+    public function products()
+    {
+        return $this->hasMany(TblProduct::class, 'vendor_id', 'id');
+    }
+}
