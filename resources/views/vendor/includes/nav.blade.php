@@ -12,11 +12,13 @@
             <!-- Navigation Menu -->
             <div class="col-lg-6 col-md-5">
                 <ul class="nav">
+                    @if($vendor->status == 'approved')
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('vendor.home') }}">
                             <i class="fas fa-home"></i> Dashboard
                         </a>
                     </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{{ route('vendor.profile', Auth::id()) }}">
                             <i class="fas fa-user"></i> Profile

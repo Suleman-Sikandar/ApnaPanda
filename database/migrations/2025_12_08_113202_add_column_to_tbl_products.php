@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tbl_order_status_logs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('tbl_products', function (Blueprint $table) {
+            $table->integer('stock_quantity')->default(0);
+            $table->string('SKU')->nullable();
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tbl_order_status_logs');
+        Schema::table('tbl_products', function (Blueprint $table) {
+            //
+        });
     }
 };

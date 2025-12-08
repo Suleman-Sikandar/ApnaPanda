@@ -8,13 +8,23 @@ use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-
+use App\Models\TblBusiness;
 class VendorProfile
 {
     private function getVendorWithDetails($id)
     {
         $user = User::with('vendorDetail')->find($id);
-        if ($user && $user->vendorDetail) {
+        
+        if (!$user) {
+            abort(404, 'User not found');
+        }
+        
+        // Ensure id property is set
+        if (!isset($user->id)) {
+            $user->id = $id;
+        }
+        
+        if ($user->vendorDetail) {
             foreach ($user->vendorDetail->getAttributes() as $key => $value) {
                 // Only set if not already set (preserve User attributes if conflict, though unlikely for these specific fields)
                 if (!isset($user->$key)) {
@@ -93,7 +103,8 @@ class VendorProfile
     {
         $vendor = $this->getVendorWithDetails($id);
         $activeSection = 'business';
-        return view('vendor.profile.index', compact('vendor', 'activeSection'));
+        $categories=TblBusiness::all();
+        return view('vendor.profile.index', compact('vendor', 'activeSection', 'categories'));
     }
 
     public function businessinfoStore(BusinessInformationRequest $request, $id = null)
@@ -173,7 +184,9 @@ class VendorProfile
 
             $vendor->update($data);
             
-            if (!$resetVerification && $vendor->current_step < 4) {
+            // Allow moving to next step if currently behind step 4
+            // (Even if resetVerification triggered demotion from step 7 to 6, we should still help user move to 4 if they were at 3)
+            if ($vendor->current_step < 4) {
                 $vendor->update(['current_step' => 4]);
             }
 
@@ -288,10 +301,10 @@ class VendorProfile
             
             $vendor->update([
                 'is_face_verified' => true,
-                'current_step' => 7 // Completed
+                'current_step' => 7 
             ]);
 
-            return response()->json(['success' => true, 'message' => 'Face verification successful! Redirecting to dashboard...']);
+            return response()->json(['success' => true, 'message' => 'Request sent to the admin. You will receive an email after admin approval.']);
 
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

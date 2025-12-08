@@ -26,29 +26,29 @@ class BusinessInformationRequest extends FormRequest
             // ===== Business Information =====
             'business_name'                 => [
                 'required', 'string', 'max:255',
-                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_name')->ignore($this->vendor, 'user_id'),
+                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_name')->ignore($this->route('id'), 'user_id'),
             ],
             'business_type'                 => 'required|string|max:255',
             'category'                      => 'required|string|max:255',
             'business_registration_number'  => [
                 'nullable', 'string', 'max:255',
-                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_registration_number')->ignore($this->vendor, 'user_id'),
+                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_registration_number')->ignore($this->route('id'), 'user_id'),
             ],
             'GST_number'                    => [
                 'nullable', 'string', 'max:50',
-                \Illuminate\Validation\Rule::unique('tbl_vendors', 'GST_number')->ignore($this->vendor, 'user_id'),
+                \Illuminate\Validation\Rule::unique('tbl_vendors', 'GST_number')->ignore($this->route('id'), 'user_id'),
             ],
             'PAN_number'                    => [
                 'nullable', 'string', 'max:50',
-                \Illuminate\Validation\Rule::unique('tbl_vendors', 'PAN_number')->ignore($this->vendor, 'user_id'),
+                \Illuminate\Validation\Rule::unique('tbl_vendors', 'PAN_number')->ignore($this->route('id'), 'user_id'),
             ],
             'business_email'                => [
                 'nullable', 'email', 'max:255',
-                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_email')->ignore($this->vendor, 'user_id'),
+                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_email')->ignore($this->route('id'), 'user_id'),
             ],
             'business_phone'                => [
                 'required', 'string', 'min:10', 'max:20',
-                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_phone')->ignore($this->vendor, 'user_id'),
+                \Illuminate\Validation\Rule::unique('tbl_vendors', 'business_phone')->ignore($this->route('id'), 'user_id'),
             ],
             'alternative_phone'             => 'nullable|string|min:10|max:20',
             'establishment_year'            => 'nullable|digits:4|integer|min:1900|max:' . date('Y'),

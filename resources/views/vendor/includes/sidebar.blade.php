@@ -9,15 +9,57 @@
 
         <!-- Verification Badge -->
         <div style="text-align: center; margin-top: 10px;">
-            @if($vendor->is_face_verified)
-                <span style="background: #10b981; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                    <i class="fas fa-check-circle"></i> Verified
-                </span>
-            @else
-                <span style="background: #6b7280; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                    <i class="fas fa-exclamation-circle"></i> Not Verified
-                </span>
-            @endif
+            @php
+                $status = $vendor->status; // pending, approved, suspended, rejected
+
+                switch ($status) {
+                    case 'approved':
+                        $badge = [
+                            'color' => '#10b981',
+                            'icon' => 'fas fa-check-circle',
+                            'text' => 'Approved',
+                        ];
+                        break;
+
+                    case 'pending':
+                        $badge = [
+                            'color' => '#f59e0b',
+                            'icon' => 'fas fa-clock',
+                            'text' => 'Pending',
+                        ];
+                        break;
+
+                    case 'suspended':
+                        $badge = [
+                            'color' => '#ef4444',
+                            'icon' => 'fas fa-ban',
+                            'text' => 'Suspended',
+                        ];
+                        break;
+
+                    case 'rejected':
+                        $badge = [
+                            'color' => '#6b7280',
+                            'icon' => 'fas fa-times-circle',
+                            'text' => 'Rejected',
+                        ];
+                        break;
+
+                    default:
+                        $badge = [
+                            'color' => '#6b7280',
+                            'icon' => 'fas fa-question-circle',
+                            'text' => 'Unknown',
+                        ];
+                        break;
+                }
+            @endphp
+
+            <span
+                style="background: {{ $badge['color'] }}; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                <i class="{{ $badge['icon'] }}"></i> {{ $badge['text'] }}
+            </span>
+
         </div>
 
         <!-- Modal -->
@@ -47,52 +89,64 @@
             $allStepsComplete = $vendor->current_step >= 7;
         @endphp
 
-        <a href="{{ route('vendor.profile', $vendor->id) }}" class="menu-item {{ $activeSection == 'profile' ? 'active' : '' }}">
+        <a href="{{ route('vendor.profile', $vendor->id) }}"
+            class="menu-item {{ $activeSection == 'profile' ? 'active' : '' }}">
             <i class="fas fa-user"></i>
             <span>Personal Info</span>
         </a>
-        
-        <a href="{{ ($vendor->current_step >= 2 || $allStepsComplete) ? route('vendor.business.info', $vendor->id) : '#' }}" 
-           class="menu-item {{ $activeSection == 'business' ? 'active' : '' }} {{ ($vendor->current_step < 2 && !$allStepsComplete) ? 'disabled' : '' }}"
-           style="{{ ($vendor->current_step < 2 && !$allStepsComplete) ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
+
+        <a href="{{ $vendor->current_step >= 2 || $allStepsComplete ? route('vendor.business.info', $vendor->id) : '#' }}"
+            class="menu-item {{ $activeSection == 'business' ? 'active' : '' }} {{ $vendor->current_step < 2 && !$allStepsComplete ? 'disabled' : '' }}"
+            style="{{ $vendor->current_step < 2 && !$allStepsComplete ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
             <i class="fas fa-building"></i>
             <span>Business Info</span>
-            @if($vendor->current_step < 2 && !$allStepsComplete) <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i> @endif
+            @if ($vendor->current_step < 2 && !$allStepsComplete)
+                <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i>
+            @endif
         </a>
 
-        <a href="{{ ($vendor->current_step >= 3 || $allStepsComplete) ? route('vendor.documents', $vendor->id) : '#' }}" 
-           class="menu-item {{ $activeSection == 'documents' ? 'active' : '' }} {{ ($vendor->current_step < 3 && !$allStepsComplete) ? 'disabled' : '' }}"
-           style="{{ ($vendor->current_step < 3 && !$allStepsComplete) ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
+        <a href="{{ $vendor->current_step >= 3 || $allStepsComplete ? route('vendor.documents', $vendor->id) : '#' }}"
+            class="menu-item {{ $activeSection == 'documents' ? 'active' : '' }} {{ $vendor->current_step < 3 && !$allStepsComplete ? 'disabled' : '' }}"
+            style="{{ $vendor->current_step < 3 && !$allStepsComplete ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
             <i class="fas fa-file-alt"></i>
             <span>Documents</span>
-            @if($vendor->current_step < 3 && !$allStepsComplete) <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i> @endif
+            @if ($vendor->current_step < 3 && !$allStepsComplete)
+                <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i>
+            @endif
         </a>
 
-        <a href="{{ ($vendor->current_step >= 4 || $allStepsComplete) ? route('vendor.bank', $vendor->id) : '#' }}" 
-           class="menu-item {{ $activeSection == 'bank' ? 'active' : '' }} {{ ($vendor->current_step < 4 && !$allStepsComplete) ? 'disabled' : '' }}"
-           style="{{ ($vendor->current_step < 4 && !$allStepsComplete) ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
+        <a href="{{ $vendor->current_step >= 4 || $allStepsComplete ? route('vendor.bank', $vendor->id) : '#' }}"
+            class="menu-item {{ $activeSection == 'bank' ? 'active' : '' }} {{ $vendor->current_step < 4 && !$allStepsComplete ? 'disabled' : '' }}"
+            style="{{ $vendor->current_step < 4 && !$allStepsComplete ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
             <i class="fas fa-university"></i>
             <span>Bank Details</span>
-            @if($vendor->current_step < 4 && !$allStepsComplete) <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i> @endif
+            @if ($vendor->current_step < 4 && !$allStepsComplete)
+                <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i>
+            @endif
         </a>
 
-        <a href="{{ ($vendor->current_step >= 5 || $allStepsComplete) ? route('vendor.address', $vendor->id) : '#' }}" 
-           class="menu-item {{ $activeSection == 'addresses' ? 'active' : '' }} {{ ($vendor->current_step < 5 && !$allStepsComplete) ? 'disabled' : '' }}"
-           style="{{ ($vendor->current_step < 5 && !$allStepsComplete) ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
+        <a href="{{ $vendor->current_step >= 5 || $allStepsComplete ? route('vendor.address', $vendor->id) : '#' }}"
+            class="menu-item {{ $activeSection == 'addresses' ? 'active' : '' }} {{ $vendor->current_step < 5 && !$allStepsComplete ? 'disabled' : '' }}"
+            style="{{ $vendor->current_step < 5 && !$allStepsComplete ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
             <i class="fas fa-map-marker-alt"></i>
             <span>Address</span>
-            @if($vendor->current_step < 5 && !$allStepsComplete) <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i> @endif
+            @if ($vendor->current_step < 5 && !$allStepsComplete)
+                <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i>
+            @endif
         </a>
 
-        <a href="{{ ($vendor->current_step >= 6 || $allStepsComplete) ? route('vendor.face.verification', $vendor->id) : '#' }}" 
-           class="menu-item {{ $activeSection == 'face_verification' ? 'active' : '' }} {{ ($vendor->current_step < 6 && !$allStepsComplete) ? 'disabled' : '' }}"
-           style="{{ ($vendor->current_step < 6 && !$allStepsComplete) ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
+        <a href="{{ $vendor->current_step >= 6 || $allStepsComplete ? route('vendor.face.verification', $vendor->id) : '#' }}"
+            class="menu-item {{ $activeSection == 'face_verification' ? 'active' : '' }} {{ $vendor->current_step < 6 && !$allStepsComplete ? 'disabled' : '' }}"
+            style="{{ $vendor->current_step < 6 && !$allStepsComplete ? 'opacity: 0.5; cursor: not-allowed;' : '' }}">
             <i class="fas fa-camera"></i>
             <span>Face Verification</span>
-            @if($vendor->current_step < 6 && !$allStepsComplete) <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i> @endif
+            @if ($vendor->current_step < 6 && !$allStepsComplete)
+                <i class="fas fa-lock" style="float: right; margin-top: 4px; font-size: 12px;"></i>
+            @endif
         </a>
 
-        <a href="{{ route('vendor.security', $vendor->id) }}" class="menu-item {{ $activeSection == 'security' ? 'active' : '' }}">
+        <a href="{{ route('vendor.security', $vendor->id) }}"
+            class="menu-item {{ $activeSection == 'security' ? 'active' : '' }}">
             <i class="fas fa-shield-alt"></i>
             <span>Security</span>
         </a>
@@ -100,20 +154,20 @@
 </aside>
 
 @push('scripts')
-<script>
-    // Image Modal
-    function openImageModal(src) {
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        modalImg.src = src;
-        modal.style.display = 'flex';
-    }
-
-    // Close modal when clicking outside the image
-    document.getElementById('imageModal').addEventListener('click', function(e) {
-        if (e.target.id === 'imageModal') {
-            this.style.display = 'none';
+    <script>
+        // Image Modal
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modalImg.src = src;
+            modal.style.display = 'flex';
         }
-    });
-</script>
+
+        // Close modal when clicking outside the image
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target.id === 'imageModal') {
+                this.style.display = 'none';
+            }
+        });
+    </script>
 @endpush

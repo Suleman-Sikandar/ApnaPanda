@@ -108,10 +108,18 @@
             const result = await response.json();
 
             if (result.success) {
-                statusDiv.innerText = result.message;
-                setTimeout(() => {
-                    window.location.href = '{{ route("vendor.home") }}';
-                }, 1500);
+                statusDiv.style.display = 'none'; // Hide status div
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Verification Successful!',
+                    text: result.message, // "Request sent to the admin..."
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '{{ route("vendor.home") }}';
+                    }
+                });
             } else {
                 statusDiv.className = 'alert alert-danger';
                 statusDiv.innerText = result.message;

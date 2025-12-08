@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OrderItemController;
 use App\Http\Controllers\Admin\OrderLogController;
+use App\Http\Controllers\Admin\BusinessController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------
@@ -118,5 +119,12 @@ Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(functi
     // Order Logs
     Route::get('order-logs', [OrderLogController::class,'index'])->name('order-logs.index');
     Route::delete('order-logs/delete/{id}', [OrderLogController::class,'destroy'])->name('order-logs.destroy');
+    //Business
+    //Business
+    Route::get('business', [BusinessController::class, 'index'])->name('business.index');
+    Route::post('business/store', [BusinessController::class, 'store'])->name('business.store');
+    Route::get('business/edit/{id}', [BusinessController::class, 'edit'])->name('business.edit');
+    Route::post('business/update/{id}', [BusinessController::class, 'update'])->name('business.update');
+    Route::delete('business/delete/{id}', [BusinessController::class, 'destroy'])->name('business.destroy');
 });
   

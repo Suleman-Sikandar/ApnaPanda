@@ -35,8 +35,11 @@
             <!-- Category -->
             <div class="form-group">
                 <label class="form-label">Category <span style="color:red;">*</span></label>
-                <input type="text" class="form-control @error('category') is-invalid @enderror"
-                    name="category" value="{{ old('category', $vendor->category) }}" required>
+                <select name="category" id="category" class="form-control">
+                    @foreach ($categories as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
                 @error('category')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror

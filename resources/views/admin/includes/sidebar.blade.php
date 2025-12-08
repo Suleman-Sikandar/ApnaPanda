@@ -18,6 +18,12 @@
                 <i class="bi bi-graph-up"></i>
                 <span>Analytics</span>
             </a>
+            @if(validatePermissions('admin/business'))
+            <a href="{{ route('admin.business.index') }}" class="nav-item">
+                <i class="bi bi-diagram-3"></i>
+                <span>Business Types</span>
+            </a>
+            @endif
         </div>
 
         <div class="nav-section">
@@ -49,49 +55,50 @@
                 </a>
             @endif
             @if (validatePermissions('admin/orders'))
-            <div class="nav-item-dropdown">
-                <a href="#" class="nav-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}" onclick="toggleDropdown(event, 'orderDropdown')">
-                    <i class="bi bi-receipt"></i>
-                    <span>Order Management</span>
-                    <i class="bi bi-chevron-down dropdown-arrow"></i>
-                </a>
-                <div class="dropdown-submenu" id="orderDropdown">
-                    <a href="{{ route('admin.orders.index') }}" class="nav-subitem">
-                        <i class="bi bi-circle"></i>
-                        <span>All Orders</span>
+                <div class="nav-item-dropdown">
+                    <a href="#" class="nav-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}"
+                        onclick="toggleDropdown(event, 'orderDropdown')">
+                        <i class="bi bi-receipt"></i>
+                        <span>Order Management</span>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
                     </a>
-                    <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="nav-subitem">
-                        <i class="bi bi-circle text-warning"></i>
-                        <span>Pending</span>
-                    </a>
-                    <a href="{{ route('admin.orders.index', ['status' => 'processing']) }}" class="nav-subitem">
-                        <i class="bi bi-circle text-info"></i>
-                        <span>Processing</span>
-                    </a>
-                    <a href="{{ route('admin.orders.index', ['status' => 'completed']) }}" class="nav-subitem">
-                        <i class="bi bi-circle text-success"></i>
-                        <span>Completed</span>
-                    </a>
-                    <a href="{{ route('admin.orders.index', ['status' => 'cancelled']) }}" class="nav-subitem">
-                        <i class="bi bi-circle text-danger"></i>
-                        <span>Cancelled</span>
-                    </a>
+                    <div class="dropdown-submenu" id="orderDropdown">
+                        <a href="{{ route('admin.orders.index') }}" class="nav-subitem">
+                            <i class="bi bi-circle"></i>
+                            <span>All Orders</span>
+                        </a>
+                        <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="nav-subitem">
+                            <i class="bi bi-circle text-warning"></i>
+                            <span>Pending</span>
+                        </a>
+                        <a href="{{ route('admin.orders.index', ['status' => 'processing']) }}" class="nav-subitem">
+                            <i class="bi bi-circle text-info"></i>
+                            <span>Processing</span>
+                        </a>
+                        <a href="{{ route('admin.orders.index', ['status' => 'completed']) }}" class="nav-subitem">
+                            <i class="bi bi-circle text-success"></i>
+                            <span>Completed</span>
+                        </a>
+                        <a href="{{ route('admin.orders.index', ['status' => 'cancelled']) }}" class="nav-subitem">
+                            <i class="bi bi-circle text-danger"></i>
+                            <span>Cancelled</span>
+                        </a>
+                    </div>
                 </div>
-            </div>
             @endif
             @if (validatePermissions('admin/order-items'))
-            <a href="{{ route('admin.order-items.index') }}"
-                class="nav-item {{ request()->routeIs('admin.order-items.index') ? 'active' : '' }}">
-                <i class="bi bi-cart-check"></i>
-                <span>Order Items</span>
-            </a>
+                <a href="{{ route('admin.order-items.index') }}"
+                    class="nav-item {{ request()->routeIs('admin.order-items.index') ? 'active' : '' }}">
+                    <i class="bi bi-cart-check"></i>
+                    <span>Order Items</span>
+                </a>
             @endif
             @if (validatePermissions('admin/order-logs'))
-            <a href="{{ route('admin.order-logs.index') }}"
-                class="nav-item {{ request()->routeIs('admin.order-logs.index') ? 'active' : '' }}">
-                <i class="bi bi-journal-text"></i>
-                <span>Order Logs</span>
-            </a>
+                <a href="{{ route('admin.order-logs.index') }}"
+                    class="nav-item {{ request()->routeIs('admin.order-logs.index') ? 'active' : '' }}">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Order Logs</span>
+                </a>
             @endif
         </div>
 

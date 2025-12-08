@@ -76,9 +76,9 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>PKR {{ number_format($item->price) }}</td>
+                                <td>PKR {{ number_format($item->unit_price) }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td class="text-end fw-bold">PKR {{ number_format($item->price * $item->quantity) }}</td>
+                                <td class="text-end fw-bold">PKR {{ number_format($item->unit_price * $item->quantity) }}</td>
                             </tr>
                             @endforeach
                         </tbody>

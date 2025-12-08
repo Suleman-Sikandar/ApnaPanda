@@ -13,6 +13,9 @@ class TblProduct extends Model
         'category_id',
         'price',
         'status',
+        'stock_quantity',
+        'SKU',
+        'description',
     ];
     public function vendor()
     {

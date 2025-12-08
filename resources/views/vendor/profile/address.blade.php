@@ -58,7 +58,7 @@
                 @enderror
             </div>
 
-            <!-- Latitude -->
+            {{-- <!-- Latitude -->
             <div class="form-group">
                 <label class="form-label">Latitude</label>
                 <input type="text" class="form-control @error('latitude') is-invalid @enderror"
@@ -76,7 +76,7 @@
                 @error('longitude')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
-            </div>
+            </div> --}}
 
         </div>
         <button type="submit" class="save-btn">

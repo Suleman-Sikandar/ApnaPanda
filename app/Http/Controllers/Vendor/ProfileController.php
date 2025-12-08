@@ -26,14 +26,19 @@ class ProfileController extends Controller
     private function checkStep($requiredStep)
     {
         $userId = Auth::id();
+        
+        // If not authenticated, redirect to login
+        if (!$userId) {
+            return redirect()->route('login')->with('error', 'Please login to continue.');
+        }
+        
         $vendor = TblVendorModel::where('user_id', $userId)->first();
 
         if (!$vendor && $requiredStep > 2) {
-            return redirect()->route('vendor.business.info', $userId)
-                ->with('error', 'Please complete business information first.');
+            return redirect()->route('vendor.profile', $userId)
+                ->with('error', 'Please complete your profile first.');
         }
 
-        // Vendor exists but hasn't completed required step
         if ($vendor && $vendor->current_step < $requiredStep) {
             $routes = [
                 1 => 'vendor.profile',
@@ -46,14 +51,13 @@ class ProfileController extends Controller
 
             $redirectRoute = $routes[$vendor->current_step] ?? 'vendor.profile';
 
-            // Avoid redirect loops: if already on the route, do nothing
             if ($redirectRoute !== \Route::currentRouteName()) {
                 return redirect()->route($redirectRoute, $userId)
                     ->with('error', 'Please complete previous steps first.');
             }
         }
 
-        return null; // All good
+        return null;
     }
 
     // ===================== Step 1 =====================

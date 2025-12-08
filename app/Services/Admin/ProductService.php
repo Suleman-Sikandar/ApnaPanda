@@ -28,12 +28,15 @@ class ProductService
     {
         try {
             $validate = $request->validate([
-                'name'        => 'required|string|max:150',
-                'vendor_id'   => 'required|integer',
-                'category_id' => 'required|integer',
-                'price'       => 'required|numeric',
-                'status'      => 'required|in:active,out_of_stock,pending_review,banned',
-                'images.*'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+                'name'           => 'required|string|max:150',
+                'vendor_id'      => 'required|integer',
+                'category_id'    => 'required|integer',
+                'price'          => 'required|numeric',
+                'stock_quantity' => 'nullable|integer|min:0',
+                'SKU'            => 'nullable|string|max:100|unique:tbl_products,SKU',
+                'description'    => 'nullable|string',
+                'status'         => 'required|in:active,out_of_stock,pending_review,banned',
+               'images.*'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             ]);
 
             $product = TblProduct::create($validate);
@@ -95,12 +98,15 @@ class ProductService
             $product = TblProduct::findOrFail($id);
 
             $validate = $request->validate([
-                'name'        => 'required|string|max:150',
-                'vendor_id'   => 'required|integer',
-                'category_id' => 'required|integer',
-                'price'       => 'required|numeric',
-                'status'      => 'required|in:active,out_of_stock,pending_review,banned',
-                'images.*'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+                'name'           => 'required|string|max:150',
+                'vendor_id'      => 'required|integer',
+                'category_id'    => 'required|integer',
+                'price'          => 'required|numeric',
+                'stock_quantity' => 'nullable|integer|min:0',
+                'SKU'            => 'nullable|string|max:100|unique:tbl_products,SKU,' . $id,
+                'description'    => 'nullable|string',
+                'status'         => 'required|in:active,out_of_stock,pending_review,banned',
+                'images.*'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             ]);
 
             $product->update($validate);
