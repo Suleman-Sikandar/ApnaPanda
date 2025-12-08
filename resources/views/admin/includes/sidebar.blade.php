@@ -19,7 +19,7 @@
                 <span>Analytics</span>
             </a>
         </div>
-        
+
         <div class="nav-section">
             <span class="nav-section-title">E-Commerce</span>
             {{-- <a href="#" class="nav-item">
@@ -28,37 +28,89 @@
                 <span class="badge bg-primary">24</span>
             </a> --}}
             @if (validatePermissions('admin/product-categories'))
-                <a href="{{ route('admin.product.categories') }}" class="nav-item {{ request()->routeIs('admin.product.categories') ? 'active' : '' }}">
-                <i class="bi bi-grid-3x3-gap"></i>
-                <span>Product Categories</span>
+                <a href="{{ route('admin.product.categories') }}"
+                    class="nav-item {{ request()->routeIs('admin.product.categories') ? 'active' : '' }}">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    <span>Product Categories</span>
+                </a>
+            @endif
+            @if (validatePermissions('admin/products'))
+                <a href="{{ route('admin.products') }}"
+                    class="nav-item {{ request()->routeIs('admin.products') ? 'active' : '' }}">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Products</span>
+                </a>
+            @endif
+            @if (validatePermissions('admin/payment-methods'))
+                <a href="{{ route('admin.payment_method.index') }}"
+                    class="nav-item {{ request()->routeIs('admin.payment_method.index') ? 'active' : '' }}">
+                    <i class="bi bi-credit-card"></i>
+                    <span>Payment Methods</span>
+                </a>
+            @endif
+            @if (validatePermissions('admin/orders'))
+            <div class="nav-item-dropdown">
+                <a href="#" class="nav-item {{ request()->routeIs('admin.orders.index') ? 'active' : '' }}" onclick="toggleDropdown(event, 'orderDropdown')">
+                    <i class="bi bi-receipt"></i>
+                    <span>Order Management</span>
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+                </a>
+                <div class="dropdown-submenu" id="orderDropdown">
+                    <a href="{{ route('admin.orders.index') }}" class="nav-subitem">
+                        <i class="bi bi-circle"></i>
+                        <span>All Orders</span>
+                    </a>
+                    <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="nav-subitem">
+                        <i class="bi bi-circle text-warning"></i>
+                        <span>Pending</span>
+                    </a>
+                    <a href="{{ route('admin.orders.index', ['status' => 'processing']) }}" class="nav-subitem">
+                        <i class="bi bi-circle text-info"></i>
+                        <span>Processing</span>
+                    </a>
+                    <a href="{{ route('admin.orders.index', ['status' => 'completed']) }}" class="nav-subitem">
+                        <i class="bi bi-circle text-success"></i>
+                        <span>Completed</span>
+                    </a>
+                    <a href="{{ route('admin.orders.index', ['status' => 'cancelled']) }}" class="nav-subitem">
+                        <i class="bi bi-circle text-danger"></i>
+                        <span>Cancelled</span>
+                    </a>
+                </div>
+            </div>
+            @endif
+            @if (validatePermissions('admin/order-items'))
+            <a href="{{ route('admin.order-items.index') }}"
+                class="nav-item {{ request()->routeIs('admin.order-items.index') ? 'active' : '' }}">
+                <i class="bi bi-cart-check"></i>
+                <span>Order Items</span>
             </a>
             @endif
-            @if(validatePermissions('admin/products'))
-           <a href="{{ route('admin.products') }}" class="nav-item {{ request()->routeIs('admin.products') ? 'active' : '' }}">
-                <i class="bi bi-box-seam"></i>
-                <span>Products</span>
+            @if (validatePermissions('admin/order-logs'))
+            <a href="{{ route('admin.order-logs.index') }}"
+                class="nav-item {{ request()->routeIs('admin.order-logs.index') ? 'active' : '' }}">
+                <i class="bi bi-journal-text"></i>
+                <span>Order Logs</span>
             </a>
             @endif
-              {{--<a href="#" class="nav-item">
-                <i class="bi bi-people"></i>
-                <span>Customers</span>
-            </a> --}}
         </div>
 
         <div class="nav-section">
             <span class="nav-section-title">Vendors</span>
-            @if(validatePermissions('admin/vendors'))
-            <a href="{{ route('admin.vendors') }}" class="nav-item {{ request()->routeIs('admin.vendors') ? 'active' : '' }}">
-                <i class="bi bi-shop"></i>
-                <span>All Vendors</span>
-            </a>
+            @if (validatePermissions('admin/vendors'))
+                <a href="{{ route('admin.vendors') }}"
+                    class="nav-item {{ request()->routeIs('admin.vendors') ? 'active' : '' }}">
+                    <i class="bi bi-shop"></i>
+                    <span>All Vendors</span>
+                </a>
             @endif
-            @if(validatePermissions('admin/vendors/pending-approval'))
-            <a href="{{ route('admin.vendors.pending') }}" class="nav-item {{ request()->routeIs('admin.vendors.pending') ? 'active' : '' }}">
-                <i class="bi bi-clock-history"></i>
-                <span>Pending Approval</span>
-                {{-- <span class="badge bg-warning">5</span> --}}
-            </a>
+            @if (validatePermissions('admin/vendors/pending-approval'))
+                <a href="{{ route('admin.vendors.pending') }}"
+                    class="nav-item {{ request()->routeIs('admin.vendors.pending') ? 'active' : '' }}">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Pending Approval</span>
+                    {{-- <span class="badge bg-warning">5</span> --}}
+                </a>
             @endif
             <a href="#" class="nav-item">
                 <i class="bi bi-star"></i>

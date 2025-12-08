@@ -9,6 +9,10 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OrderItemController;
+use App\Http\Controllers\Admin\OrderLogController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------
@@ -87,5 +91,32 @@ Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(functi
     Route::post('products/ban/{id}', [ProductController::class, 'banUpdate'])->name('products.banUpdate');
     Route::get('products-detail/{id}', [ProductController::class, 'show'])->name('products.detail');
     Route::get('products/image/delete/{id}', [ProductController::class, 'deleteImage'])->name('products.image.delete');
+    
+    // Payment Methods
+    Route::get('payment-methods', [PaymentMethodController::class, 'index'])->name('payment_method.index');
+    Route::get('payment-methods/create', [PaymentMethodController::class, 'create'])->name('payment_method.create');
+    Route::post('payment-methods/store', [PaymentMethodController::class, 'store'])->name('payment_method.store');
+    Route::get('payment-methods/edit/{id}', [PaymentMethodController::class, 'edit'])->name('payment_method.edit');
+    Route::put('payment-methods/update/{id}', [PaymentMethodController::class, 'update'])->name('payment_method.update');
+    Route::delete('payment-methods/delete/{id}', [PaymentMethodController::class, 'destroy'])->name('payment_method.destroy');
+
+    // Orders
+    Route::get('orders', [OrderController::class,'index'])->name('orders.index');
+    Route::get('orders/detail/{id}', [OrderController::class,'show'])->name('orders.show');
+    Route::post('orders/store', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('orders/edit/{id}', [OrderController::class,'edit'])->name('orders.edit');
+    Route::post('orders/update/{id}', [OrderController::class,'update'])->name('orders.update');
+    Route::delete('orders/delete/{id}', [OrderController::class,'destroy'])->name('orders.destroy');
+
+    // Order Items
+    Route::get('order-items', [OrderItemController::class,'index'])->name('order-items.index');
+    Route::post('order-items/store', [OrderItemController::class, 'store'])->name('order-items.store');
+    Route::get('order-items/edit/{id}', [OrderItemController::class,'edit'])->name('order-items.edit');
+    Route::post('order-items/update/{id}', [OrderItemController::class,'update'])->name('order-items.update');
+    Route::delete('order-items/delete/{id}', [OrderItemController::class,'destroy'])->name('order-items.destroy');
+
+    // Order Logs
+    Route::get('order-logs', [OrderLogController::class,'index'])->name('order-logs.index');
+    Route::delete('order-logs/delete/{id}', [OrderLogController::class,'destroy'])->name('order-logs.destroy');
 });
- 
+  
