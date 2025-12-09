@@ -67,9 +67,15 @@
     </div>
 </section>
 
-<!-- Popular Restaurants -->
+<!-- Popular Products / Restaurants -->
 <section class="container mb-5">
-    <h2 class="section-title">Popular Restaurants Near You</h2>
+    <h2 class="section-title">
+        @if($selectedCategory)
+            {{ $selectedCategory->category_name }} Products
+        @else
+            Popular Products Near You
+        @endif
+    </h2>
     <p class="section-subtitle">Discover the best food experiences</p>
 
     <!-- Filter Bar -->
@@ -82,215 +88,78 @@
         <button class="btn filter-btn"><i class="fas fa-dollar-sign"></i> Under Rs.300</button>
     </div>
 
-    <!-- Vendor Cards -->
+    <!-- Product Cards -->
     <div class="row">
-        <!-- Vendor 1 -->
+        @forelse($products as $product)
         <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="vendor-card" onclick="location.href='{{ url('/customer/product-listing') }}'">
                 <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">30% OFF</span>
+                    @if($product->images && $product->images->count() > 0)
+                        <!-- Image Carousel -->
+                        <div id="carousel-{{ $product->id }}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach($product->images as $index => $image)
+                                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                         alt="{{ $product->name }}" 
+                                         class="vendor-image d-block w-100">
+                                </div>
+                                @endforeach
+                            </div>
+                            <!-- Carousel Controls -->
+                            @if($product->images->count() > 1)
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ $product->id }}" data-bs-slide="prev" onclick="event.stopPropagation()">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ $product->id }}" data-bs-slide="next" onclick="event.stopPropagation()">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            <!-- Indicators -->
+                            <div class="carousel-indicators">
+                                @foreach($product->images as $index => $image)
+                                <button type="button" data-bs-target="#carousel-{{ $product->id }}" data-bs-slide-to="{{ $index }}" 
+                                        class="{{ $index == 0 ? 'active' : '' }}" aria-current="{{ $index == 0 ? 'true' : 'false' }}" 
+                                        aria-label="Slide {{ $index + 1 }}" onclick="event.stopPropagation()"></button>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+                    @else
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" alt="{{ $product->name }}" class="vendor-image">
+                    @endif
+                    @if($product->discount_percent > 0)
+                        <span class="vendor-badge">{{ $product->discount_percent }}% OFF</span>
+                    @endif
                 </div>
                 <div class="vendor-info">
-                    <div class="vendor-name">Burger King</div>
+                    <div class="vendor-name">{{ $product->name }}</div>
                     <div class="vendor-meta">
                         <span class="rating"><i class="fas fa-star"></i> 4.5</span>
                         <span>25-30 mins</span>
-                        <span>Rs.150 for two</span>
+                        <span>PKR {{ number_format($product->price) }}</span>
                     </div>
                     <div class="vendor-tags">
-                        <span class="tag">Burgers</span>
-                        <span class="tag">Fast Food</span>
+                        <span class="tag">{{ $product->category->category_name ?? 'N/A' }}</span>
+                        @if($product->vendor && $product->vendor->users)
+                            <span class="tag">{{ $product->vendor->users->name }}</span>
+                        @endif
                     </div>
                     <div class="delivery-info">
                         <span><i class="fas fa-motorcycle"></i> Free Delivery</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
+                        <span class="text-success"><i class="fas fa-circle"></i> Available</span>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Vendor 2 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/2') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">FREE DELIVERY</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Pizza Hut</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.3</span>
-                        <span>30-35 mins</span>
-                        <span>Rs.400 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Pizza</span>
-                        <span class="tag">Italian</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Free Delivery</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
+        @empty
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-box-open" style="font-size: 4rem; color: #ddd;"></i>
+            <h4 class="mt-3">No products found</h4>
+            <p class="text-muted">Try selecting a different category</p>
         </div>
-
-        <!-- Vendor 3 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/3') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">50% OFF</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Biryani House</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.7</span>
-                        <span>20-25 mins</span>
-                        <span>Rs.200 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Biryani</span>
-                        <span class="tag">Pakistani</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Rs.50</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor 4 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/4') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">20% OFF</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Sushi Bar</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.6</span>
-                        <span>35-40 mins</span>
-                        <span>Rs.800 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Sushi</span>
-                        <span class="tag">Japanese</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Free Delivery</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor 5 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/5') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">40% OFF</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Karachi Cafe</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.4</span>
-                        <span>15-20 mins</span>
-                        <span>Rs.250 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Desi</span>
-                        <span class="tag">BBQ</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Rs.30</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor 6 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/6') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">FREE DELIVERY</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Domino's Pizza</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.2</span>
-                        <span>30-35 mins</span>
-                        <span>Rs.500 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Pizza</span>
-                        <span class="tag">Fast Food</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Free Delivery</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor 7 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/7') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">25% OFF</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Salad Stop</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.8</span>
-                        <span>20-25 mins</span>
-                        <span>Rs.350 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Healthy</span>
-                        <span class="tag">Salads</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Rs.40</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vendor 8 -->
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="vendor-card" onclick="location.href='{{ url('/vendor/8') }}'">
-                <div style="position: relative;">
-                    <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400" alt="Restaurant" class="vendor-image">
-                    <span class="vendor-badge">35% OFF</span>
-                </div>
-                <div class="vendor-info">
-                    <div class="vendor-name">Burger Lab</div>
-                    <div class="vendor-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 4.5</span>
-                        <span>25-30 mins</span>
-                        <span>Rs.300 for two</span>
-                    </div>
-                    <div class="vendor-tags">
-                        <span class="tag">Burgers</span>
-                        <span class="tag">Wraps</span>
-                    </div>
-                    <div class="delivery-info">
-                        <span><i class="fas fa-motorcycle"></i> Free Delivery</span>
-                        <span class="text-success"><i class="fas fa-circle"></i> Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforelse
     </div>
 </section>
 
@@ -420,6 +289,46 @@
     @include('customer.includes.footer')
 @endsection
 @section('scripts')
+<style>
+    /* Carousel custom styling */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 30px;
+        height: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        opacity: 0.7;
+    }
+    
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        opacity: 1;
+    }
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .carousel-indicators {
+        bottom: 5px;
+    }
+    
+    .carousel-indicators button {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin: 0 3px;
+    }
+    
+    .vendor-image {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
 <script>
     // Search functionality
     document.querySelector('.hero-search input').addEventListener('keypress', function(e) {

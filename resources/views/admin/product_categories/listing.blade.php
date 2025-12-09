@@ -47,6 +47,7 @@
                     <tr>
                         <th>#</th>
                         <th>Category Name</th>
+                        <th>Icon Class</th>
                         <th>Created Date</th>
                         <th>Actions</th>
                     </tr>
@@ -57,6 +58,7 @@
                         <tr>
                             <td>{{ $cat->id }}</td>
                             <td><strong>{{ $cat->category_name }}</strong></td>
+                            <td>{{ $cat->icon_class ?? 'N/A' }}</td>
                             <td>{{ $cat->created_at->format('y-m-d') }}</td>
                             <td>
                                 <div class="role-action-buttons">

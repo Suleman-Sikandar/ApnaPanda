@@ -2,28 +2,16 @@
     <div class="category-nav" style="padding-top: 30px;">
         <div class="container">
             <nav class="nav justify-content-center">
-                <a class="nav-link active" href="{{ url('/') }}">
+                <a class="nav-link {{ !request()->category ? 'active' : '' }}" href="{{ url('/') }}">
                     <i class="fas fa-home"></i> All
                 </a>
-                <a class="nav-link" href="{{ url('/category/food') }}">
-                    <i class="fas fa-utensils"></i> Food
+                @foreach($categories as $category)
+                <a class="nav-link {{ request()->category == $category->id ? 'active' : '' }}" 
+                   href="{{ url('/?category=' . $category->id) }}">
+                    <i class="{{ $category->icon_class }}"></i> {{ $category->category_name }}
                 </a>
-                <a class="nav-link" href="{{ url('/category/grocery') }}">
-                    <i class="fas fa-shopping-basket"></i> Grocery
-                </a>
-                <a class="nav-link" href="{{ url('/category/pharmacy') }}">
-                    <i class="fas fa-pills"></i> Pharmacy
-                </a>
-                <a class="nav-link" href="{{ url('/category/clothing') }}">
-                    <i class="fas fa-tshirt"></i> Clothing
-                </a>
-                <a class="nav-link" href="{{ url('/category/electronics') }}">
-                    <i class="fas fa-laptop"></i> Electronics
-                </a>
-                <a class="nav-link" href="{{ url('/category/services') }}">
-                    <i class="fas fa-tools"></i> Services
-                </a>
-                <a class="nav-link" href="{{ url('/category/parcel') }}">
+                @endforeach
+                 <a class="nav-link" href="{{ url('/') }}">
                     <i class="fas fa-box"></i> Parcel
                 </a>
             </nav>

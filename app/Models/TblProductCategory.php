@@ -8,7 +8,8 @@ class TblProductCategory extends Model
 {
     protected $table='tbl_product_categories';
     protected $fillable=[
-        'category_name'
+        'category_name',
+        'icon_class'
     ];
 
     public function products()

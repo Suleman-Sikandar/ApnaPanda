@@ -22,6 +22,12 @@
                     <span class="form-error text-danger" id="error-category_name"></span>
                 </div>
 
+                <div class="drawer-form-group">
+                    <label for="icon_class">Icon Class <span class="text-danger">*</span></label>
+                    <input type="text" name="icon_class" id="icon_class" placeholder="Enter Icon class" required>
+                    <span class="form-error text-danger" id="error-icon_class"></span>
+                </div>
+
             </form>
         </div>
 

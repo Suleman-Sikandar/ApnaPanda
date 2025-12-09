@@ -20,6 +20,7 @@ class ProductCategoryService
         try {
             $validate = $request->validate([
                 'category_name' => 'required|string|max:100|unique:tbl_product_categories,category_name',
+                'icon_class' => 'nullable|string|max:100|unique:tbl_product_categories,icon_class',
             ]);
 
             $category = TblProductCategory::create($validate);
@@ -71,6 +72,7 @@ class ProductCategoryService
 
             $validate = $request->validate([
                 'category_name' => "required|string|max:100|unique:tbl_product_categories,category_name,$id",
+                'icon_class' => "nullable|string|max:100|unique:tbl_product_categories,icon_class,$id",
             ]);
 
             $category->update($validate);
