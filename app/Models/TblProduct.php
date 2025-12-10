@@ -16,6 +16,12 @@ class TblProduct extends Model
         'stock_quantity',
         'SKU',
         'description',
+        'discount_percent',
+        'discount_amount',
+        'has_free_delivery',
+        'delivery_charge',
+        'rating',
+        'review_count',
     ];
     public function vendor()
     {

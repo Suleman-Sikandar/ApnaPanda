@@ -8,6 +8,565 @@
     @include('customer.includes.category')
 @endsection
 
+@section('styles')
+    <style>
+        /* ===================================
+   MY ORDERS PAGE STYLES
+   =================================== */
+
+/* Main Container */
+.orders-container {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+.orders-container .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Page Header */
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title i {
+    color: #FF6B35;
+}
+
+/* Stats Cards */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.stat-icon i {
+    font-size: 28px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+/* Order Tabs */
+.order-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    color: #7f8c8d;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    border-color: #FF6B35;
+    color: #FF6B35;
+}
+
+.tab-btn.active {
+    background: #FF6B35;
+    color: white;
+    border-color: #FF6B35;
+}
+
+/* Order Cards */
+#orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Order Header */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-id {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.order-date {
+    font-size: 13px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.order-status {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background: #FFF3CD;
+    color: #856404;
+}
+
+.status-on-the-way {
+    background: #D1ECF1;
+    color: #0C5460;
+}
+
+.status-delivered {
+    background: #D4EDDA;
+    color: #155724;
+}
+
+.status-cancelled {
+    background: #F8D7DA;
+    color: #721C24;
+}
+
+/* Vendor Shop Card */
+.vendor-shop-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+    border: none;
+    border-bottom: 2px solid #f0f0f0;
+    background: #fafafa;
+    margin: 0;
+    border-radius: 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.vendor-shop-card > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.vendor-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vendor-name {
+    font-weight: 700;
+    font-size: 16px;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.vendor-location {
+    font-size: 13px;
+    color: #7f8c8d;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vendor-location i {
+    color: #FF6B35;
+}
+
+.vendor-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.vendor-actions a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vendor-actions a:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.vendor-actions img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Order Items */
+.order-items {
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.order-item:hover {
+    background: #f0f1f3;
+}
+
+.item-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+}
+
+.item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #2c3e50;
+}
+
+.item-qty {
+    font-size: 13px;
+    color: #7f8c8d;
+}
+
+.item-price {
+    font-weight: 700;
+    font-size: 16px;
+    color: #FF6B35;
+}
+
+/* Order Footer */
+.order-footer {
+    padding: 20px 25px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.order-total {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.order-total-label {
+    font-size: 13px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.order-total-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.order-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Order Action Buttons */
+.btn-order {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: #FF6B35;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #e55a2b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.btn-secondary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-outline {
+    background: white;
+    color: #7f8c8d;
+    border: 2px solid #e0e0e0;
+}
+
+.btn-outline:hover {
+    border-color: #FF6B35;
+    color: #FF6B35;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .orders-container {
+        padding: 20px 0;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .order-header {
+        padding: 15px 20px;
+    }
+
+    .order-id {
+        font-size: 16px;
+    }
+
+    .vendor-shop-card {
+        padding: 15px 20px;
+    }
+
+    .vendor-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .order-items {
+        padding: 15px 20px;
+    }
+
+    .order-footer {
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .btn-order {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .vendor-shop-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .vendor-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .order-item {
+        gap: 10px;
+    }
+
+    .item-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .order-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-order {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Empty State */
+.empty-orders {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.empty-orders i {
+    font-size: 80px;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.empty-orders h3 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.empty-orders p {
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+/* Loading Animation */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+    </style>
+@endsection
 @section('content')
 <div class="orders-container">
     <div class="container">
@@ -23,7 +582,7 @@
                     <div class="stat-icon" style="background: #E8F5E9;">
                         <i class="fas fa-check-circle" style="color: #48C774;"></i>
                     </div>
-                    <div class="stat-value">48</div>
+                    <div class="stat-value">{{ $completedOrders }}</div>
                     <div class="stat-label">Completed Orders</div>
                 </div>
 
@@ -31,7 +590,7 @@
                     <div class="stat-icon" style="background: #FFF3E0;">
                         <i class="fas fa-clock" style="color: #FF9800;"></i>
                     </div>
-                    <div class="stat-value">3</div>
+                    <div class="stat-value">{{ $activeOrders }}</div>
                     <div class="stat-label">Active Orders</div>
                 </div>
 
@@ -39,7 +598,7 @@
                     <div class="stat-icon" style="background: #E3F2FD;">
                         <i class="fas fa-wallet" style="color: #2196F3;"></i>
                     </div>
-                    <div class="stat-value">Rs. 24,500</div>
+                    <div class="stat-value">Rs. {{ number_format($totalSpent, 0) }}</div>
                     <div class="stat-label">Total Spent</div>
                 </div>
 
@@ -52,7 +611,7 @@
                 </div>
             </div>
 
-            <!-- Order Tabs -->
+            {{-- <!-- Order Tabs -->
             <div class="order-tabs">
                 <button class="tab-btn active" onclick="filterOrders('all')">
                     All Orders
@@ -66,233 +625,103 @@
                 <button class="tab-btn" onclick="filterOrders('cancelled')">
                     Cancelled
                 </button>
-            </div>
+            </div> --}}
         </div>
 
         <!-- Order List -->
         <div id="orders-list">
             <!-- Active Order 1 -->
-            <div class="order-card" data-status="active">
+            @foreach($orders as $order)
+            <div class="order-card" data-status="{{ $order->order_status }}">
                 <div class="order-header">
                     <div class="order-info">
-                        <div class="order-id">Order #12345</div>
+                        <div class="order-id">Order #{{ $order->id }}</div>
                         <div class="order-date">
-                            <i class="far fa-clock"></i> Today, 2:30 PM
+                            <i class="far fa-clock"></i> {{ $order->created_at->format('M d, Y, h:i A') }}
                         </div>
                     </div>
-                    <span class="order-status status-on-the-way">
-                        <i class="fas fa-motorcycle"></i> On the Way
+                    <span class="order-status status-{{ Str::slug($order->order_status) }}">
+                        <i class="fas fa-{{ $order->order_status == 'pending' ? 'clock' : ($order->order_status == 'on-the-way' ? 'motorcycle' : ($order->order_status == 'delivered' ? 'check-circle' : 'times-circle')) }}"></i> {{ ucfirst(str_replace('-', ' ', $order->order_status)) }}
                     </span>
                 </div>
 
-                <div class="vendor-info">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100" alt="Burger King" class="vendor-logo">
-                    <div>
-                        <div class="vendor-name">Burger King</div>
-                        <div class="vendor-location">
-                            <i class="fas fa-map-marker-alt"></i> Clifton Block 2, Karachi
+                {{-- Vendor Details Card --}}
+                <div class="section-card" style="margin-bottom: 15px;">
+                    <div class="section-header">
+                        <h3 class="section-title"><i class="fas fa-store text-danger"></i> Vendor Details</h3>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0;">
+                        <div style="display: flex; align-items: center;">
+                            <img src="{{ asset('icon/man.jfif') }}" class="vendor-logo" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                            <div class="vendor-name" style="font-weight: bold;">{{ optional(optional(optional($order->orderItems->first())->product->vendor)->users)->name ?? 'N/A' }}</div>
+                        </div>
+                        <div class="vendor-actions" style="display: flex; gap: 10px;">
+                            <a href="https://wa.me/{{ optional(optional($order->orderItems->first())->product->vendor)->phone }}" target="_blank" style="text-decoration: none; margin-right:50px;" title="Chat on WhatsApp">
+                                <img src="{{ asset('icon/whatsapp.png') }}" alt="WhatsApp" style="width: 75px; height: 75px;">
+                            </a>
+                            <a href="#" style="text-decoration: none;" title="Chat on ApnaPanda">
+                                <img src="{{ asset('icon/chat.png') }}" alt="ApnaPanda Chat" style="width: 50px; height: 50px;">
+                            </a>
                         </div>
                     </div>
                 </div>
 
+                {{-- Delivery Address Card --}}
+                <div class="section-card" style="margin-bottom: 15px;">
+                    <div class="section-header">
+                        <h3 class="section-title"><i class="fas fa-map-marker-alt text-danger"></i> Delivery Address</h3>
+                    </div>
+                    <div style="padding: 10px 0; font-size: 0.9em; color: #555;">
+                        {{ $order->delivery_address ?? 'N/A' }}
+                    </div>
+                </div>
+
+              
                 <div class="order-items">
-                    <div class="order-item">
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100" alt="Whopper" class="item-image">
-                        <div class="item-details">
-                            <div class="item-name">Whopper</div>
-                            <div class="item-qty">Qty: 2</div>
+                    @foreach($order->orderItems as $item)
+                        <div class="order-item">
+                            <img src="{{ optional(optional($item->product)->images->first())->image_path ? asset('storage/' . $item->product->images->first()->image_path) : asset('path/to/placeholder.png') }}" alt="{{ optional($item->product)->name ?? 'N/A' }}" class="item-image">
+                            <div class="item-details">
+                                <div class="item-name">{{ optional($item->product)->name ?? 'N/A' }}</div>
+                                <div class="item-qty">Qty: {{ $item->quantity }}</div>
+                            </div>
+                            <div class="item-price">Rs. {{ number_format($item->unit_price * $item->quantity, 0) }}</div>
                         </div>
-                        <div class="item-price">Rs. 900</div>
-                    </div>
-                    <div class="order-item">
-                        <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=100" alt="Fries" class="item-image">
-                        <div class="item-details">
-                            <div class="item-name">French Fries (Large)</div>
-                            <div class="item-qty">Qty: 1</div>
-                        </div>
-                        <div class="item-price">Rs. 150</div>
-                    </div>
+                    @endforeach
                 </div>
 
                 <div class="order-footer">
                     <div class="order-total">
                         <span class="order-total-label">Total:</span>
-                        <span class="order-total-amount">Rs. 1,788</span>
+                        <span class="order-total-amount">Rs. {{ number_format($order->payment_amount, 0) }}</span>
                     </div>
                     <div class="order-actions">
-                        <button class="btn-order btn-primary" onclick="trackOrder('12345')">
-                            <i class="fas fa-map-marked-alt"></i> Track Order
-                        </button>
-                        <button class="btn-order btn-outline" onclick="viewDetails('12345')">
+                        @if($order->order_status == 'pending' || $order->order_status == 'on-the-way')
+                            <button class="btn-order btn-primary" onclick="trackOrder('{{ $order->id }}')">
+                                <i class="fas fa-map-marked-alt"></i> Track Order
+                            </button>
+                            <button class="btn-order btn-outline" onclick="cancelOrder('{{ $order->id }}')">
+                                <i class="fas fa-times-circle"></i> Cancel
+                            </button>
+                        @elseif($order->order_status == 'completed')
+                            <button class="btn-order btn-secondary" onclick="reorder('{{ $order->id }}')">
+                                <i class="fas fa-redo"></i> Reorder
+                            </button>
+                            <button class="btn-order btn-outline" onclick="rateOrder('{{ $order->id }}')">
+                                <i class="fas fa-star"></i> Rate Order
+                            </button>
+                        @elseif($order->order_status == 'cancelled')
+                            <button class="btn-order btn-secondary" onclick="reorder('{{ $order->id }}')">
+                                <i class="fas fa-redo"></i> Order Again
+                            </button>
+                        @endif
+                        <button class="btn-order btn-outline" onclick="viewDetails('{{ $order->id }}')">
                             <i class="fas fa-eye"></i> Details
                         </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Active Order 2 -->
-            <div class="order-card" data-status="active">
-                <div class="order-header">
-                    <div class="order-info">
-                        <div class="order-id">Order #12344</div>
-                        <div class="order-date">
-                            <i class="far fa-clock"></i> Today, 1:15 PM
-                        </div>
-                    </div>
-                    <span class="order-status status-preparing">
-                        <i class="fas fa-utensils"></i> Preparing
-                    </span>
-                </div>
-
-                <div class="vendor-info">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100" alt="Pizza Hut" class="vendor-logo">
-                    <div>
-                        <div class="vendor-name">Pizza Hut</div>
-                        <div class="vendor-location">
-                            <i class="fas fa-map-marker-alt"></i> DHA Phase 5, Karachi
-                        </div>
-                    </div>
-                </div>
-
-                <div class="order-items">
-                    <div class="order-item">
-                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100" alt="Pizza" class="item-image">
-                        <div class="item-details">
-                            <div class="item-name">Pepperoni Pizza (Large)</div>
-                            <div class="item-qty">Qty: 1</div>
-                        </div>
-                        <div class="item-price">Rs. 1,200</div>
-                    </div>
-                </div>
-
-                <div class="order-footer">
-                    <div class="order-total">
-                        <span class="order-total-label">Total:</span>
-                        <span class="order-total-amount">Rs. 1,350</span>
-                    </div>
-                    <div class="order-actions">
-                        <button class="btn-order btn-primary" onclick="trackOrder('12344')">
-                            <i class="fas fa-map-marked-alt"></i> Track Order
-                        </button>
-                        <button class="btn-order btn-outline" onclick="cancelOrder('12344')">
-                            <i class="fas fa-times-circle"></i> Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Delivered Order 1 -->
-            <div class="order-card" data-status="delivered">
-                <div class="order-header">
-                    <div class="order-info">
-                        <div class="order-id">Order #12340</div>
-                        <div class="order-date">
-                            <i class="far fa-clock"></i> Yesterday, 8:45 PM
-                        </div>
-                    </div>
-                    <span class="order-status status-delivered">
-                        <i class="fas fa-check-circle"></i> Delivered
-                    </span>
-                </div>
-
-                <div class="vendor-info">
-                    <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100" alt="Biryani House" class="vendor-logo">
-                    <div>
-                        <div class="vendor-name">Biryani House</div>
-                        <div class="vendor-location">
-                            <i class="fas fa-map-marker-alt"></i> Bahadurabad, Karachi
-                        </div>
-                    </div>
-                </div>
-
-                <div class="order-items">
-                    <div class="order-item">
-                        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100" alt="Biryani" class="item-image">
-                        <div class="item-details">
-                            <div class="item-name">Chicken Biryani</div>
-                            <div class="item-qty">Qty: 2</div>
-                        </div>
-                        <div class="item-price">Rs. 800</div>
-                    </div>
-                    <div class="order-item">
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100" alt="Raita" class="item-image">
-                        <div class="item-details">
-                            <div class="item-name">Raita</div>
-                            <div class="item-qty">Qty: 2</div>
-                        </div>
-                        <div class="item-price">Rs. 100</div>
-                    </div>
-                </div>
-
-                <div class="order-footer">
-                    <div class="order-total">
-                        <span class="order-total-label">Total:</span>
-                        <span class="order-total-amount">Rs. 1,020</span>
-                    </div>
-                    <div class="order-actions">
-                        <button class="btn-order btn-secondary" onclick="reorder('12340')">
-                            <i class="fas fa-redo"></i> Reorder
-                        </button>
-                        <button class="btn-order btn-outline" onclick="rateOrder('12340')">
-                            <i class="fas fa-star"></i> Rate Order
-                        </button>
-                        <button class="btn-order btn-outline" onclick="viewDetails('12340')">
-                            <i class="fas fa-eye"></i> Details
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cancelled Order -->
-            <div class="order-card" data-status="cancelled">
-                <div class="order-header">
-                    <div class="order-info">
-                        <div class="order-id">Order #12330</div>
-                        <div class="order-date">
-                            <i class="far fa-clock"></i> Dec 10, 2024, 3:20 PM
-                        </div>
-                    </div>
-                    <span class="order-status status-cancelled">
-                        <i class="fas fa-times-circle"></i> Cancelled
-                    </span>
-                </div>
-
-                <div class="vendor-info">
-                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100" alt="Sushi Bar" class="vendor-logo">
-                    <div>
-                        <div class="vendor-name">Sushi Bar</div>
-                        <div class="vendor-location">
-                            <i class="fas fa-map-marker-alt"></i> Zamzama, Karachi
-                        </div>
-                    </div>
-                </div>
-
-                <div class="order-items">
-                    <div class="order-item">
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100" alt="Sushi" class="item-image">
-                        <div class="item-details">
-                            <div class="item-name">California Roll</div>
-                            <div class="item-qty">Qty: 1</div>
-                        </div>
-                        <div class="item-price">Rs. 850</div>
-                    </div>
-                </div>
-
-                <div class="order-footer">
-                    <div class="order-total">
-                        <span class="order-total-label">Refund:</span>
-                        <span class="order-total-amount" style="color: #48C774;">Rs. 950</span>
-                    </div>
-                    <div class="order-actions">
-                        <button class="btn-order btn-secondary" onclick="reorder('12330')">
-                            <i class="fas fa-redo"></i> Order Again
-                        </button>
-                        <button class="btn-order btn-outline" onclick="viewDetails('12330')">
-                            <i class="fas fa-eye"></i> Details
-                        </button>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
@@ -357,3 +786,4 @@
     }
 </script>
 @endsection
+

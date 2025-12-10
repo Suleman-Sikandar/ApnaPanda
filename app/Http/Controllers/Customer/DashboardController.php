@@ -18,27 +18,19 @@ class DashboardController extends Controller
         return $this->dashboardService->index();
     }
 
-    public function listing()
-    {
-        return $this->dashboardService->listing();
-    }
-
     public function cart()
     {
         return $this->dashboardService->cart();
-    }
-    public function checkout()
-    {
-        return $this->dashboardService->checkout();
     }
 
     public function track()
     {
         return $this->dashboardService->track();
     }
-    public function order()
+
+    public function productDetail($id)
     {
-        return $this->dashboardService->order();
+        return $this->dashboardService->productDetail($id);
     }
   
 }

@@ -53,6 +53,51 @@
                     <span class="form-error text-danger" id="error-price"></span>
                 </div>
 
+                <!-- Rating -->
+                <div class="drawer-form-group">
+                    <label for="edit_rating">Rating (0-5)</label>
+                    <input type="number" name="rating" id="edit_rating" placeholder="Enter Product Rating" step="0.1" min="0" max="5">
+                    <span class="form-error text-danger" id="error-rating"></span>
+                </div>
+
+                <!-- Review Count -->
+                <div class="drawer-form-group">
+                    <label for="edit_review_count">Review Count</label>
+                    <input type="number" name="review_count" id="edit_review_count" placeholder="Enter Review Count" min="0">
+                    <span class="form-error text-danger" id="error-review_count"></span>
+                </div>
+
+                <!-- Discount Percentage -->
+                <div class="drawer-form-group">
+                    <label for="edit_discount_percent">Discount Percentage (%)</label>
+                    <input type="number" name="discount_percent" id="edit_discount_percent" placeholder="Enter Discount Percentage" step="0.01" min="0" max="100">
+                    <span class="form-error text-danger" id="error-discount_percent"></span>
+                </div>
+
+                <!-- Discount Amount -->
+                <div class="drawer-form-group">
+                    <label for="edit_discount_amount">Discount Amount (PKR)</label>
+                    <input type="number" name="discount_amount" id="edit_discount_amount" placeholder="Enter Discount Amount" step="0.01" min="0">
+                    <span class="form-error text-danger" id="error-discount_amount"></span>
+                </div>
+
+                <!-- Free Delivery -->
+                <div class="drawer-form-group">
+                    <label for="edit_has_free_delivery">Free Delivery</label>
+                    <select name="has_free_delivery" id="edit_has_free_delivery">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <span class="form-error text-danger" id="error-has_free_delivery"></span>
+                </div>
+
+                <!-- Delivery Charge -->
+                <div class="drawer-form-group">
+                    <label for="edit_delivery_charge">Delivery Charge (PKR)</label>
+                    <input type="number" name="delivery_charge" id="edit_delivery_charge" placeholder="Enter Delivery Charge" step="0.01" min="0">
+                    <span class="form-error text-danger" id="error-delivery_charge"></span>
+                </div>
+
                 <!-- Status -->
                 <div class="drawer-form-group">
                     <label for="edit_status">Status <span class="text-danger">*</span></label>

@@ -2,6 +2,7 @@
 
 use App\Models\TblAdmin;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TblCart;
 
 /**
  * Check if the currently authenticated admin user has permission to access a specific route/slug
@@ -105,4 +106,15 @@ function hasAllPermissions(array $slugs)
 function validatePermissions($slug)
 {
     return hasPermission($slug);
+}
+
+
+
+if (!function_exists('cartTotal')) {
+    function cartTotal() {
+        if (Auth::check()) {
+            return TblCart::where('customer_id', Auth::id())->count();
+        }
+        return 0;
+    }
 }

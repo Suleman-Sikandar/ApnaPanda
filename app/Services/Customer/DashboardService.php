@@ -22,7 +22,16 @@ class DashboardService
             $productsQuery->where('category_id', $categoryId);
         }
         
-        $products = $productsQuery->latest()->get();
+        if (request()->ajax()) {
+            $products = $productsQuery->latest()->paginate(12);
+            return response()->json([
+                'products' => $products->items(),
+                'hasMore' => $products->hasMorePages(),
+                'nextPage' => $products->currentPage() + 1
+            ]);
+        }
+        
+        $products = $productsQuery->latest()->paginate(12);
         
         $selectedCategory = $categoryId ? TblProductCategory::find($categoryId) : null;
         
@@ -33,28 +42,22 @@ class DashboardService
         return view('customer.dashboard', compact('categories', 'products', 'vendors', 'selectedCategory'));
     }
 
-    public function listing()
+    public function productDetail($id)
     {
+        $product = TblProduct::with(['category', 'vendor.users', 'images'])
+            ->where('id', $id)
+            ->where('status', 'active')
+            ->firstOrFail();
+        
+        $categories = TblProductCategory::all();
+        
         $data = array();
-        $data['pageTitle'] = 'Product Listing';
-        $data['subTitle'] = 'Customer';
-        return view('customer.product.lisitng')->with($data);
-    }
-
-    public function cart()
-    {
-        $data = array();
-        $data['pageTitle'] = 'Cart';
-        $data['subTitle'] = 'Customer';
-        return view('customer.product.cart')->with($data);
-    }
-
-    public function checkout()
-    {
-        $data = array();
-        $data['pageTitle'] = 'Checkout';
-        $data['subTitle'] = 'Customer';
-        return view('customer.product.checkout')->with($data);
+        $data['pageTitle'] = $product->name;
+        $data['subTitle'] = 'Product Details';
+        $data['product'] = $product;
+        $data['categories'] = $categories;
+        
+        return view('customer.product.detail')->with($data);
     }
 
     public function track()
@@ -63,13 +66,5 @@ class DashboardService
         $data['pageTitle'] = 'Track Order';
         $data['subTitle'] = 'Customer';
         return view('customer.product.tracking')->with($data);
-    }
-
-    public function order()
-    {
-        $data = array();
-        $data['pageTitle'] = 'My Orders';
-        $data['subTitle'] = 'Customer';
-        return view('customer.product.order')->with($data);
     }
 }

@@ -1,0 +1,285 @@
+var hostParts = window.location.host.split('.');
+var portalDomain = window.location.host.substr(window.location.host.split('.')[0].length + 1, window.location.host.length - window.location.host.split('.')[0].length);
+var env = 'local';
+var blobFolder = 'qa/';
+var domainWithEnvPlaceHolder = 'https://@@env.' + hostParts[1] + '.' + hostParts[2] + (hostParts.length > 3 ? '.' + hostParts[3] : '');
+var contentPath = domainWithEnvPlaceHolder + '/blobcontent/ecom/';
+var baseUrl = domainWithEnvPlaceHolder + '/payment';
+var portalBaseURL = domainWithEnvPlaceHolder;
+var absoluteBaseUrl = domainWithEnvPlaceHolder;
+var basePortalUrl = domainWithEnvPlaceHolder;
+var runTimeBundleSrc = baseUrl + '/build/runtime.bundle-1.0.0.64.js';
+var vendorBundleSrc = baseUrl + '/build/vendors.bundle-1.0.0.64.js';
+var vendorReactBundleSrc = baseUrl + '/build/react.bundle-1.0.0.64.js';
+var developerBundleSrc = baseUrl + '/build/app.bundle-1.0.0.64.js';
+var plansBundleSrc = baseUrl + '/build/plans.bundle-1.0.0.64.js';
+var appJsSrc = baseUrl + '/scripts/app-1.0.0.64.js';
+var bootstrapSrc = 'styles/bootstrap/bootstrap.min.css';
+var fontAwesomeSrc = 'fonts/fontawesome5-subset/css/all.min.css';
+var googleFontsSrc = 'https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700|Source+Sans+Pro:200,300,400,600,700|Open+Sans:300,400,600,700,800|Roboto+Slab:100,300,400,700|Work+Sans:300,400,500,600,700|Merriweather:300,400,600,700';
+var esShimSrc = 'scripts/es6/es6-shim.min.js';
+var resFileName = 'dev.json';
+var portalDomainList = {
+    mpit: 'ilcvperfetto.it', mpes: 'micvideal.es', mpfr: 'moncvparfait.fr', mpbr: 'meucurriculoperfeito.com.br', mpuk: 'myperfectcv.co.uk',
+    mpde: 'meinperfekterlebenslauf.de', mpnl: 'hetperfectecv.nl', mpmx: 'micvideal.mx'
+};
+
+var assetsEnabledDomainList = ['mpfr', 'mpuk'];
+var currentPortal;
+
+var mainCssSrc = baseUrl + '/stylesheets/@@portalStyleDir/main-1.0.0.64.css';
+var domain, imgDir, styleSheetDir, jsonFileDir, isMultiLangPortal;
+
+
+if (window.location.host.split('.').length > 2) {
+    domain = window.location.host.split(':')[0].substr(window.location.host.indexOf('.') + 1);
+} else {
+    domain = window.location.host;
+}
+
+function setContentDirectory(domain) {
+    switch (domain) {
+        case portalDomainList['mpit']:
+            currentPortal = 'mpit';
+            jsonFileDir = styleSheetDir = imgDir = 'mit';
+            break;
+        case portalDomainList['mpes']:
+            currentPortal = 'mpes';
+            jsonFileDir = styleSheetDir = imgDir = 'mes';
+            break;
+        case portalDomainList['mpfr']:
+            currentPortal = 'mpfr';
+            jsonFileDir = styleSheetDir = imgDir = 'mfr';
+            break;
+        case portalDomainList['mpbr']:
+            currentPortal = 'mpbr';
+            jsonFileDir = styleSheetDir = imgDir = 'mbr';
+            break;
+        case portalDomainList['mpnl']:
+            currentPortal = 'mpnl';
+            jsonFileDir = styleSheetDir = imgDir = 'mnl';
+            break;
+        case portalDomainList['mpde']:
+            currentPortal = 'mpde';
+            jsonFileDir = styleSheetDir = imgDir = 'mde';
+            break;
+        case portalDomainList['mpmx']:
+            currentPortal = 'mpmx';
+            jsonFileDir = styleSheetDir = imgDir = 'mmx';
+            break;
+        case portalDomainList['mpuk']:
+            currentPortal = 'mpuk';
+            styleSheetDir = 'muk';
+            imgDir = 'muk';
+            jsonFileDir = 'muk';
+            break;
+        default:
+            break;
+    }
+}
+
+setContentDirectory(domain); //set css,styles and imageDirectory
+
+function isAssetsSubDomainEnabledOnPortal() {
+    return currentPortal && assetsEnabledDomainList.indexOf(currentPortal) > -1;
+}
+
+var isAssetsEnabled = isAssetsSubDomainEnabledOnPortal();
+
+switch (hostParts[0]) {
+    case 'reg':
+    case 'reg-app':
+    case 'pen':
+        env = hostParts[0] + '-assets';
+        blobFolder = 'reg/';
+        resFileName = 'reg-1.0.0.64.json';
+        break;
+    case 'stg':
+    case 'stg-app':
+        env = 'stg-assets';
+        blobFolder = 'stg/';
+        resFileName = 'stg-1.0.0.64.json';
+        break;
+    case 'qa':
+    case 'qa-app':
+        env = hostParts[0] + '-assets';
+        blobFolder = 'qa/';
+        break;
+    case 'perf':
+    case 'perf-app':
+        env = hostParts[0] + '-assets';
+        blobFolder = 'perf/';
+        break;
+    case 'www':
+        env = 'assets';
+        blobFolder = 'prod/';
+        resFileName = 'prod-1.0.0.64.json';
+        break;
+}
+
+
+baseUrl = baseUrl.replace('@@env', env);
+portalBaseURL = portalBaseURL.replace('@@env', env);
+contentPath = contentPath.replace('@@env', env);
+var ecomHostName = window.location.hostname.substring(window.location.hostname.indexOf('.') + 1);
+var localisedTextJsonPath = contentPath + blobFolder + ecomHostName + '/localizedText-1.0.0.64.json';
+var resfilePath = contentPath + blobFolder + ecomHostName + '/' + resFileName;
+var nrJsPath = contentPath + blobFolder + ecomHostName + '/nr.js';
+var nrJsPathForMultilang = contentPath + blobFolder + 'mpmultilang/config/' + ecomHostName + '/nr.js';
+
+function setBuildJsDirectory(localizedPath) {
+    mainCssSrc = mainCssSrc.replace('payment', localizedPath);
+}
+
+function isEmpty(obj) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+function prefetchFiles(src, callback, attributes) {
+    var s, r, t;
+    r = false;
+    s = document.createElement('link');
+    s.rel = 'prefetch';
+    s.href = src;
+    if (attributes && isEmpty(attributes)) {
+        for (var key in attributes) {
+            if (attributes.hasOwnProperty(key) && typeof attributes[key] === 'string') {
+                var attr = document.createAttribute(key);
+                attr.value = attributes[key];
+                s.setAttributeNode(attr);
+            }
+        }
+    }
+    s.onload = s.onreadystatechange = function () {
+        if (!r && (!this.readyState || this.readyState == 'complete' || this.readyState == 'loaded')) {
+            r = true;
+            callback && callback();
+        }
+    };
+    t = document.getElementsByTagName('link')[0];
+    t.parentNode.insertBefore(s, t);
+}
+
+function loadImageFiles() {
+    prefetchFiles(portalBaseURL + '/blobimages/ecom/wlb/images/logo.png');
+    prefetchFiles(portalBaseURL + '/blobimages/ecom/wlb/images/loading.gif');
+    prefetchFiles(portalBaseURL + '/blobimages/ecom/wlb/images/christopher.png');
+    prefetchFiles(portalBaseURL + '/blobimages/ecom/wlb/images/donna.png');
+    prefetchFiles(portalBaseURL + '/blobimages/ecom/wlb/images/breadcrumb-check-mpr.png');
+    if (imgDir) {
+        var baseImgUrl = '/blobimages/ecom/' + imgDir + '/';
+        prefetchFiles(portalBaseURL + baseImgUrl + 'images/christopher.png');
+        prefetchFiles(portalBaseURL + baseImgUrl + 'images/donna.png');
+        prefetchFiles(portalBaseURL + baseImgUrl + 'images/resellicons.png');
+        prefetchFiles(portalBaseURL + baseImgUrl + 'images/footer-lc-logo.png');
+        prefetchFiles(portalBaseURL + baseImgUrl + 'images/logo.svg');
+    }
+    if (imgDir == 'mfr') {
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/star-icon.svg');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/multi-user-image.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/bold-pro-logo.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/bg-curve.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/mob-curve-bg.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/user-tiles.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/circle-info.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/top-users-image.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/bottom-users-image.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/link-icon.png');
+        prefetchFiles(portalBaseURL + '/blobimages/ecom/mfr/upsell-bold-pro/images/ellipse-bg.png');
+    }
+}
+
+function loadLottieJsonFile(domain) {
+    switch (domain) {
+        case portalDomainList['mpfr']:
+            prefetchFiles(contentPath + `${blobFolder}/moncvparfait.fr/loaderAnimation.json`);
+            break;
+        default:
+            break;
+    }
+
+}
+
+function loadJsonFile(fileUrl, callback, isAsync, errorCallBack) {
+    if (window.$ != undefined && window.$ != null) {
+        window.$.ajax({
+            url: fileUrl,
+            method: 'GET',
+            async: isAsync,
+            cache: true,
+            dataType: 'json',
+            success: function (data) {
+                callback(data);
+            },
+            error: function () {
+                if (errorCallBack) {
+                    errorCallBack();
+                }
+            }
+        });
+    }
+    else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                if (xmlhttp.status == 200) {
+                    var data = JSON.parse(xmlhttp.responseText);
+                    callback(data);
+                }
+                else if (xmlhttp.status == 400) {
+                    console.error('There was an error 400 while fetching json file ');
+                }
+                else {
+                    console.error('something else other than 200 was returned while fetching json file');
+                }
+            }
+        };
+        xmlhttp.open('GET', fileUrl, true);
+        xmlhttp.send();
+    }
+}
+
+function setPortalDetails() {
+    let baseAPIURL = window.location.origin + '/ecom/api/v1/';
+    let apiURL = baseAPIURL + 'config/portal';
+    loadJsonFile(apiURL,
+        function (response) {
+            if (response) {
+                isMultiLangPortal = response.is_multi_lang;
+                prefetchAllFiles();
+            }
+        }, false);
+}
+
+setPortalDetails();
+
+function prefetchAllFiles() {
+    prefetchFiles(runTimeBundleSrc.replace('@@env', env));		//prefetch runtime bundle
+    prefetchFiles(vendorBundleSrc.replace('@@env', env));		//prefetch vendor bundle
+    prefetchFiles(vendorReactBundleSrc.replace('@@env', env));		//prefetch vendor react bundle
+    prefetchFiles(developerBundleSrc.replace('@@env', env));	//prefetch developer bundle
+    prefetchFiles(plansBundleSrc.replace('@@env', env));	//prefetch plans bundle
+    prefetchFiles(appJsSrc.replace('@@env', env));	//prefetch app JS
+    prefetchFiles(contentPath + bootstrapSrc);						//prefetch bootstrap CSS
+    prefetchFiles(contentPath + fontAwesomeSrc);						//prefetch fontawesome CSS					
+    prefetchFiles(contentPath + esShimSrc);
+    prefetchFiles(googleFontsSrc);					//prefetch googleFonts CSS
+    prefetchFiles(mainCssSrc.replace('@@env', env).replace('@@portalStyleDir', styleSheetDir));			//prefetch main CSS 
+    // prefetchFiles(localisedTextJsonPath.replace('@@jsonFileDir', jsonFileDir));   //prefetch ecom JSON (localizedText)
+    // prefetchFiles(resfilePath);
+
+    if (isMultiLangPortal) {
+        prefetchFiles(nrJsPathForMultilang);
+    }
+    else {
+        prefetchFiles(nrJsPath);
+    }
+}
+
+
+loadImageFiles();										//prefect image files
+loadLottieJsonFile(domain);										//prefect LottieJson files

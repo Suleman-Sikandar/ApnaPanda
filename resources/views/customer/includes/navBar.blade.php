@@ -53,16 +53,18 @@
                                  </li>
                              </ul>
                          </div>
-                     @endguest
 
-                     <a href="{{ url('/customer/cart') }}" class="position-relative">
+                          <a href="{{ url('/customer/all-cart/'. Auth::id()) }}" class="position-relative">
                          <i class="fas fa-shopping-cart fa-lg"></i>
                          <span
                              class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                              style="font-size:0.65rem;">
-                             3
+                            {{ cartTotal() }}
                          </span>
-                     </a>
+                     </a>   
+                     @endguest
+
+                    
                  </div>
              </div>
 

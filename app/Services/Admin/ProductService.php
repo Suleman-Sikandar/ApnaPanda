@@ -23,23 +23,49 @@ class ProductService
         return view('admin.product.listing', compact('products', 'vendors', 'categories'));
     }
 
+
     // Store a new product
     public function store(Request $request)
     {
         try {
-            $validate = $request->validate([
-                'name'           => 'required|string|max:150',
-                'vendor_id'      => 'required|integer',
-                'category_id'    => 'required|integer',
-                'price'          => 'required|numeric',
-                'stock_quantity' => 'nullable|integer|min:0',
-                'SKU'            => 'nullable|string|max:100|unique:tbl_products,SKU',
-                'description'    => 'nullable|string',
-                'status'         => 'required|in:active,out_of_stock,pending_review,banned',
-               'images.*'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            $validated = $request->validate([
+                'name'              => 'required|string|max:150',
+                'vendor_id'         => 'required|integer',
+                'category_id'       => 'required|integer',
+                'price'             => 'required|numeric|min:0',
+                'discount_percent'  => 'nullable|numeric|min:0|max:100',
+                'stock_quantity'    => 'nullable|integer|min:0',
+                'SKU'               => 'nullable|string|max:100|unique:tbl_products,SKU',
+                'description'       => 'nullable|string',
+                'status'            => 'required|in:active,out_of_stock,pending_review,banned',
+                'has_free_delivery' => 'nullable|boolean',
+                'delivery_charge'   => 'nullable|numeric|min:0',
+                'rating'            => 'nullable|numeric|min:0|max:5',
+                'review_count'      => 'nullable|integer|min:0',
+                'images.*'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             ]);
 
-            $product = TblProduct::create($validate);
+            // AUTO CALCULATE DISCOUNT AMOUNT
+            $price = $request->price;
+            $discountPercent = $request->discount_percent ?? 0;
+            $discountAmount = ($price * $discountPercent) / 100;
+
+            // If free delivery selected → charge = 0
+            $deliveryCharge = $request->has_free_delivery == 1 
+                ? 0 
+                : ($request->delivery_charge ?? 0);
+
+            // Final product data
+            $productData = array_merge($validated, [
+                'discount_percent' => $discountPercent,
+                'discount_amount'  => $discountAmount,
+                'delivery_charge'  => $deliveryCharge,
+                'has_free_delivery'=> $request->has_free_delivery ?? 0,
+                'rating'           => $request->rating ?? 0,
+                'review_count'     => $request->review_count ?? 0,
+            ]);
+
+            $product = TblProduct::create($productData);
 
             // Handle Image Upload
             if ($request->hasFile('images')) {
@@ -72,7 +98,9 @@ class ProductService
         }
     }
 
-    // Get product for editing
+
+
+    // Edit product
     public function edit($id)
     {
         try {
@@ -91,27 +119,53 @@ class ProductService
         }
     }
 
+
+
     // Update product
     public function update(Request $request, $id)
     {
         try {
             $product = TblProduct::findOrFail($id);
 
-            $validate = $request->validate([
-                'name'           => 'required|string|max:150',
-                'vendor_id'      => 'required|integer',
-                'category_id'    => 'required|integer',
-                'price'          => 'required|numeric',
-                'stock_quantity' => 'nullable|integer|min:0',
-                'SKU'            => 'nullable|string|max:100|unique:tbl_products,SKU,' . $id,
-                'description'    => 'nullable|string',
-                'status'         => 'required|in:active,out_of_stock,pending_review,banned',
-                'images.*'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            $validated = $request->validate([
+                'name'              => 'required|string|max:150',
+                'vendor_id'         => 'required|integer',
+                'category_id'       => 'required|integer',
+                'price'             => 'required|numeric|min:0',
+                'discount_percent'  => 'nullable|numeric|min:0|max:100',
+                'stock_quantity'    => 'nullable|integer|min:0',
+                'SKU'               => 'nullable|string|max:100|unique:tbl_products,SKU,' . $id,
+                'description'       => 'nullable|string',
+                'status'            => 'required|in:active,out_of_stock,pending_review,banned',
+                'has_free_delivery' => 'nullable|boolean',
+                'delivery_charge'   => 'nullable|numeric|min:0',
+                'rating'            => 'nullable|numeric|min:0|max:5',
+                'review_count'      => 'nullable|integer|min:0',
+                'images.*'          => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             ]);
 
-            $product->update($validate);
+            // AUTO CALCULATE DISCOUNT AMOUNT
+            $price = $request->price;
+            $discountPercent = $request->discount_percent ?? 0;
+            $discountAmount = ($price * $discountPercent) / 100;
 
-            // Handle New Image Upload
+            // Delivery logic
+            $deliveryCharge = $request->has_free_delivery == 1
+                ? 0
+                : ($request->delivery_charge ?? 0);
+
+            $updateData = array_merge($validated, [
+                'discount_percent' => $discountPercent,
+                'discount_amount'  => $discountAmount,
+                'delivery_charge'  => $deliveryCharge,
+                'has_free_delivery'=> $request->has_free_delivery ?? 0,
+                'rating'           => $request->rating ?? 0,
+                'review_count'     => $request->review_count ?? 0,
+            ]);
+
+            $product->update($updateData);
+
+            // Handle New Images
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $path = $image->store('products', 'public');
@@ -142,6 +196,8 @@ class ProductService
         }
     }
 
+
+
     // Delete product
     public function destroy($id)
     {
@@ -162,19 +218,21 @@ class ProductService
         }
     }
 
+
+    // View product
     public function show($id)
     {
-        $product=TblProduct::find($id);
+        $product = TblProduct::find($id);
         return view('admin.product.view_product', compact('product'));
     }
+
 
     // Delete Product Image
     public function deleteImage($id)
     {
         try {
             $image = TblImage::findOrFail($id);
-            
-            // Delete file from storage
+
             if (Storage::disk('public')->exists($image->image_path)) {
                 Storage::disk('public')->delete($image->image_path);
             }
@@ -194,27 +252,29 @@ class ProductService
         }
     }
 
+
+    // Status management
     public function active($id)
     {
-        $product = TblProduct::findOrFail($id);
-        $product->update(['status' => 'active']);
-        return redirect()->back()->with('success', 'Product marked as active successfully!');
+        TblProduct::findOrFail($id)->update(['status' => 'active']);
+        return back()->with('success', 'Product marked as active successfully!');
     }
 
     public function outOfStock($id)
     {
-        $product = TblProduct::findOrFail($id);
-        $product->update(['status' => 'out_of_stock']);
-        return redirect()->back()->with('success', 'Product marked as out of stock successfully!');
+        TblProduct::findOrFail($id)->update(['status' => 'out_of_stock']);
+        return back()->with('success', 'Product marked as out of stock successfully!');
     }
 
     public function pending($id)
     {
-        $product = TblProduct::findOrFail($id);
-        $product->update(['status' => 'pending_review']);
-        return redirect()->back()->with('success', 'Product marked as pending review successfully!');
+        TblProduct::findOrFail($id)->update(['status' => 'pending_review']);
+        return back()->with('success', 'Product marked as pending review successfully!');
     }
 
+
+
+    // Ban product
     public function ban($id)
     {
         $product = TblProduct::findOrFail($id);
@@ -228,27 +288,25 @@ class ProductService
         ]);
 
         $product = TblProduct::with('vendor.users')->findOrFail($id);
-        
-        $product->status = 'banned';
-        $product->rejection_reason = $request->rejection_reason;
-        $product->save();
+
+        $product->update([
+            'status'           => 'banned',
+            'rejection_reason' => $request->rejection_reason,
+        ]);
 
         $vendorEmail = $product->vendor->users->email;
-        $reason = $request->rejection_reason;
-        
-        $message = "Your product '{$product->name}' has been banned by the admin.";
-        $message .= "\n\nReason: " . $reason;
 
         sendEmail(
             $vendorEmail,
             "Product Banned: " . $product->name,
-            $message,
+            "Your product has been banned. Reason: " . $request->rejection_reason,
             [
                 'heading' => 'Product Banned 🚫',
                 'footer'  => 'Please contact support for more information.',
             ]
         );
 
-        return redirect()->route('admin.products.detail', $id)->with('success', 'Product banned successfully!');
+        return redirect()->route('admin.products.detail', $id)
+                         ->with('success', 'Product banned successfully!');
     }
 }

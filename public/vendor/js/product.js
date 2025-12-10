@@ -1,6 +1,6 @@
 /**
- * Product Management JavaScript
- * Handles CRUD operations for vendor products
+ * Vendor Product Management JavaScript
+ * Fully Compatible with ProductService & Drawer Forms
  */
 
 $(document).ready(function () {
@@ -17,7 +17,7 @@ $(document).ready(function () {
     });
 
     // =======================
-    // ADD MORE IMAGE INPUTS
+    // ADD/REMOVE IMAGE INPUTS
     // =======================
     $(document).on('click', '.add-image-btn', function () {
         let newInput = `
@@ -29,7 +29,6 @@ $(document).ready(function () {
         $(this).closest('.image-wrapper').append(newInput);
     });
 
-    // Remove image input
     $(document).on('click', '.remove-image-btn', function () {
         $(this).closest('.image-input-group').remove();
     });
@@ -37,9 +36,8 @@ $(document).ready(function () {
     // =======================
     // STORE PRODUCT
     // =======================
-    $('#productForm').off('submit').on('submit', function (e) {
+    $('#productForm').on('submit', function (e) {
         e.preventDefault();
-
         let formData = new FormData(this);
 
         $.ajax({
@@ -48,10 +46,9 @@ $(document).ready(function () {
             data: formData,
             contentType: false,
             processData: false,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 
             success: function (response) {
-                if (response.success === true) {
+                if (response.success) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -70,15 +67,14 @@ $(document).ready(function () {
                 $('.form-error').text('');
 
                 if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    $.each(errors, function (key, val) {
-                        $(`#productForm #error-${key}`).text(val[0]);
+                    $.each(xhr.responseJSON.errors, function (key, val) {
+                        $(`#error-${key}`).text(val[0]);
                     });
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Oops!',
-                        text: xhr.responseJSON?.message || 'Something went wrong.'
+                        title: 'Error',
+                        text: xhr.responseJSON?.message || 'Something went wrong'
                     });
                 }
             }
@@ -94,46 +90,50 @@ $(document).ready(function () {
         e.preventDefault();
 
         editProductId = $(this).data('id');
-
         $('.form-error').text('');
         $('#editProductForm')[0].reset();
 
         $('#EditProductDrawerModal').fadeIn(200);
         $('#EditProductDrawerBox').addClass('drawer-show');
 
-        // Fetch product data
         $.ajax({
             url: `/vendor/products/${editProductId}/edit`,
             method: 'GET',
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 
             success: function (response) {
-                if (response.success === true) {
-                    let product = response.product;
+                if (response.success) {
+                    let p = response.product;
 
-                    // Populate form fields
-                    $('#edit_product_id').val(product.id);
-                    $('#edit_name').val(product.name);
-                    $('#edit_category_id').val(product.category_id);
-                    $('#edit_price').val(product.price);
-                    $('#edit_stock_quantity').val(product.stock_quantity || 0);
-                    $('#edit_SKU').val(product.SKU || '');
-                    $('#edit_description').val(product.description || '');
+                    // Fill Inputs
+                    $('#edit_product_id').val(p.id);
+                    $('#edit_name').val(p.name);
+                    $('#edit_category_id').val(p.category_id);
+                    $('#edit_price').val(p.price);
+                    $('#edit_stock_quantity').val(p.stock_quantity || 0);
+                    $('#edit_SKU').val(p.SKU || '');
+                    $('#edit_rating').val(p.rating || '');
+                    $('#edit_review_count').val(p.review_count || '');
+                    $('#edit_discount_percent').val(p.discount_percent || '');
+                    $('#edit_discount_amount').val(p.discount_amount || '');
+                    $('#edit_has_free_delivery').val(p.has_free_delivery);
+                    $('#edit_delivery_charge').val(p.delivery_charge || '');
 
                     // Display existing images
                     $('#edit-image-preview').html('');
-                    if (product.images && product.images.length > 0) {
-                        product.images.forEach(function (image) {
-                            let imgHtml = `
+                    if (p.images && p.images.length > 0) {
+                        p.images.forEach(function (img) {
+                            $('#edit-image-preview').append(`
                                 <div class="position-relative" style="width: 100px; height: 100px;">
-                                    <img src="/storage/${image.image_path}" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
-                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-product-image" 
-                                            data-image-id="${image.id}" style="padding: 2px 6px;">
+                                    <img src="/storage/${img.image_path}" class="img-thumbnail"
+                                         style="width:100%; height:100%; object-fit:cover;">
+                                    <button type="button" 
+                                            class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-product-image"
+                                            data-image-id="${img.id}"
+                                            style="padding:2px 6px;">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
-                            `;
-                            $('#edit-image-preview').append(imgHtml);
+                            `);
                         });
                     }
                 }
@@ -142,12 +142,12 @@ $(document).ready(function () {
     });
 
     // =======================
-    // UPDATE PRODUCT
+    // UPDATE PRODUCT (PUT)
     // =======================
-    $('#editProductForm').off('submit').on('submit', function (e) {
+    $('#editProductForm').on('submit', function (e) {
         e.preventDefault();
-
         let formData = new FormData(this);
+        formData.append('_method', 'PUT');
 
         $.ajax({
             url: `/vendor/products/${editProductId}`,
@@ -155,10 +155,9 @@ $(document).ready(function () {
             data: formData,
             contentType: false,
             processData: false,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 
             success: function (response) {
-                if (response.success === true) {
+                if (response.success) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Updated!',
@@ -177,15 +176,14 @@ $(document).ready(function () {
                 $('.form-error').text('');
 
                 if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    $.each(errors, function (key, val) {
-                        $(`#editProductForm #edit-error-${key}`).text(val[0]);
+                    $.each(xhr.responseJSON.errors, function (key, val) {
+                        $(`#edit-error-${key}`).text(val[0]);
                     });
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Oops!',
-                        text: xhr.responseJSON?.message || 'Something went wrong.'
+                        title: 'Error',
+                        text: xhr.responseJSON?.message || 'Something went wrong'
                     });
                 }
             }
@@ -195,9 +193,7 @@ $(document).ready(function () {
     // =======================
     // DELETE PRODUCT
     // =======================
-    $(document).on('click', '.deleteProduct', function (e) {
-        e.preventDefault();
-
+    $(document).on('click', '.deleteProduct', function () {
         let id = $(this).data('id');
 
         Swal.fire({
@@ -208,28 +204,22 @@ $(document).ready(function () {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
+        }).then(result => {
 
+            if (result.isConfirmed) {
                 $.ajax({
                     url: `/vendor/products/${id}`,
                     method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 
                     success: function (response) {
-                        if (response.success === true) {
-                            Swal.fire('Deleted!', response.message, 'success')
-                                .then(() => location.reload());
-                        } else {
-                            Swal.fire('Error!', response.message || 'Failed deleting.', 'error');
-                        }
+                        Swal.fire('Deleted!', response.message, 'success')
+                            .then(() => location.reload());
                     },
 
-                    error: function (xhr) {
-                        Swal.fire('Error!', xhr.responseJSON?.message || 'Something went wrong.', 'error');
+                    error: function () {
+                        Swal.fire('Error!', 'Something went wrong.', 'error');
                     }
                 });
-
             }
         });
     });
@@ -237,42 +227,31 @@ $(document).ready(function () {
     // =======================
     // DELETE PRODUCT IMAGE
     // =======================
-    $(document).on('click', '.delete-product-image', function (e) {
-        e.preventDefault();
-
+    $(document).on('click', '.delete-product-image', function () {
         let imageId = $(this).data('image-id');
         let imageElement = $(this).closest('.position-relative');
 
         Swal.fire({
             title: 'Delete this image?',
-            text: "This action cannot be undone!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
+            confirmButtonText: 'Delete'
+        }).then(result => {
+
             if (result.isConfirmed) {
                 $.ajax({
                     url: `/vendor/products/image/${imageId}`,
                     method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 
                     success: function (response) {
-                        if (response.success === true) {
+                        if (response.success) {
                             imageElement.remove();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Deleted!',
-                                text: response.message,
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
                         }
+                        Swal.fire('Deleted!', response.message, 'success');
                     },
 
-                    error: function (xhr) {
-                        Swal.fire('Error!', xhr.responseJSON?.message || 'Failed to delete image', 'error');
+                    error: function () {
+                        Swal.fire('Error!', 'Unable to delete image.', 'error');
                     }
                 });
             }
@@ -296,7 +275,6 @@ $(document).ready(function () {
     });
 
 });
-
 
 // =======================
 // DRAWER FUNCTIONS

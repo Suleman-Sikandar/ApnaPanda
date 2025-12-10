@@ -67,6 +67,51 @@
                     <span class="form-error text-danger" id="error-SKU"></span>
                 </div>
 
+                <!-- Rating -->
+                <div class="drawer-form-group">
+                    <label for="rating">Rating (0-5)</label>
+                    <input type="number" name="rating" id="rating" placeholder="Enter Product Rating" step="0.1" min="0" max="5" value="0">
+                    <span class="form-error text-danger" id="error-rating"></span>
+                </div>
+
+                <!-- Review Count -->
+                <div class="drawer-form-group">
+                    <label for="review_count">Review Count</label>
+                    <input type="number" name="review_count" id="review_count" placeholder="Enter Review Count" min="0" value="0">
+                    <span class="form-error text-danger" id="error-review_count"></span>
+                </div>
+
+                <!-- Discount Percentage -->
+                <div class="drawer-form-group">
+                    <label for="discount_percent">Discount Percentage (%)</label>
+                    <input type="number" name="discount_percent" id="discount_percent" placeholder="Enter Discount Percentage" step="0.01" min="0" max="100" value="0">
+                    <span class="form-error text-danger" id="error-discount_percent"></span>
+                </div>
+
+                <!-- Discount Amount -->
+                <div class="drawer-form-group">
+                    <label for="discount_amount">Discount Amount (PKR)</label>
+                    <input type="number" name="discount_amount" id="discount_amount" placeholder="Enter Discount Amount" step="0.01" min="0" value="0">
+                    <span class="form-error text-danger" id="error-discount_amount"></span>
+                </div>
+
+                <!-- Free Delivery -->
+                <div class="drawer-form-group">
+                    <label for="has_free_delivery">Free Delivery</label>
+                    <select name="has_free_delivery" id="has_free_delivery">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <span class="form-error text-danger" id="error-has_free_delivery"></span>
+                </div>
+
+                <!-- Delivery Charge -->
+                <div class="drawer-form-group">
+                    <label for="delivery_charge">Delivery Charge (PKR)</label>
+                    <input type="number" name="delivery_charge" id="delivery_charge" placeholder="Enter Delivery Charge" step="0.01" min="0" value="0">
+                    <span class="form-error text-danger" id="error-delivery_charge"></span>
+                </div>
+
                 <!-- Status -->
                 <div class="drawer-form-group">
                     <label for="status">Status <span class="text-danger">*</span></label>
