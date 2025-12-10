@@ -125,6 +125,29 @@
             </a>
         </div>
 
+        <div class="nav-section">
+            <span class="nav-section-title">Riders</span>
+            @if (validatePermissions('admin/riders'))
+                <a href="{{ route('admin.riders') }}"
+                    class="nav-item {{ request()->routeIs('admin.riders') ? 'active' : '' }}">
+                    <i class="bi bi-shop"></i>
+                    <span>All Riders</span>
+                </a>
+            @endif
+            @if (validatePermissions('admin/vendors/pending-approval'))
+                <a href="{{ route('admin.vendors.pending') }}"
+                    class="nav-item {{ request()->routeIs('admin.vendors.pending') ? 'active' : '' }}">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Pending Approval</span>
+                    {{-- <span class="badge bg-warning">5</span> --}}
+                </a>
+            @endif
+            <a href="#" class="nav-item">
+                <i class="bi bi-star"></i>
+                <span>Top Vendors</span>
+            </a>
+        </div>
+
         {{-- <div class="nav-section">
             <span class="nav-section-title">Management</span>
             <a href="#" class="nav-item">

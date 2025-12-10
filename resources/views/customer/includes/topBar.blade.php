@@ -21,10 +21,18 @@
                         <i class="fas fa-store"></i> Become a Vendor
                     </a>
                 @endguest
-
-                <a href="#">
+                
+                @auth
+                <a href="{{ url('rider/profile/'. Auth::id()) }}">
                     <i class="fas fa-motorcycle"></i> Become a Rider
                 </a>
+                @endauth
+                
+                  @guest
+                    <a href="{{ route('login') }}">
+                        <i class="fas fa-store"></i> Become a Rider
+                    </a>
+                @endguest
             </div>
         </div>
     </div>

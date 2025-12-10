@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->hasOne(TblVendorModel::class, 'user_id');
     }
 
+    public function riderDetail()
+    {
+        return $this->hasOne(TblRiderModel::class, 'user_id');
+    }
+
     public function carts()
     {
         return $this->hasMany(TblCart::class);

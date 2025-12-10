@@ -5,9 +5,7 @@
 @section('sidebar')
     @include('rider.include.sidebar')
 @endsection
-@section('navbar')
-    @include('rider.include.navbar')
-@endsection
+
 @section('content')
 <div class="row">
     <div class="col-12">

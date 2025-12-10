@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ModuleCategoryController;
 use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\Admin\RiderController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PaymentMethodController;
@@ -72,6 +73,17 @@ Route::prefix('admin')->middleware('ADMIN', 'XSS')->name('admin.')->group(functi
     Route::get('vendors/suspend/{id}', [VendorController::class, 'suspend'])->name('vendors.suspend');
     Route::Post('vendors/suspend/{id}', [VendorController::class, 'suspendUpdate'])->name('vendors.suspend');
     Route::get('vendors/pending-approval', [VendorController::class, 'pendingApproval'])->name('vendors.pending');
+
+    // Riders
+    Route::get('riders', [RiderController::class, 'index'])->name('riders');
+    Route::get('riders/profile/{id}', [RiderController::class, 'show'])->name('riders.show');
+    Route::get('riders/approve/{id}', [RiderController::class, 'approve'])->name('riders.approve');
+    Route::post('riders/approve/{id}', [RiderController::class, 'approve'])->name('riders.approve');
+    Route::get('riders/reject/{id}', [RiderController::class, 'reject'])->name('riders.reject');
+    Route::post('riders/reject/{id}', [RiderController::class, 'rejectUpdate'])->name('riders.reject');
+    Route::get('riders/suspend/{id}', [RiderController::class, 'suspend'])->name('riders.suspend');
+    Route::post('riders/suspend/{id}', [RiderController::class, 'suspendUpdate'])->name('riders.suspend');
+    Route::get('riders/pending-approval', [RiderController::class, 'pendingApproval'])->name('riders.pending');
     //Product Categories
     Route::get('product-categories', [ProductCategoryController::class, 'index'])->name('product.categories');
     Route::post('product-categories/store', [ProductCategoryController::class, 'store'])->name('product.categories.store');

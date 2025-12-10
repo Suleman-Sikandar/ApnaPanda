@@ -18,4 +18,5 @@ Route::middleware('auth', 'XSS')->group(function () {
 require __DIR__.'/auth.php';
 require __DIR__.'/customer.php';
 require __DIR__.'/vendor.php';
+require __DIR__.'/rider.php';
 require __DIR__.'/admin.php';
